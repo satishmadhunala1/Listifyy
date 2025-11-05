@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
   FaTh,
@@ -32,11 +32,14 @@ const languages = ["EN", "HI", "FR", "ES"];
 const MergedNavbar = ({ onToggleAll, onHideAll }) => {
   const [location, setLocation] = useState("India");
   const [showLocationDropdown, setShowLocationDropdown] = useState(false);
-    const [typedLocation, setTypedLocation] = useState("");
+  const [typedLocation, setTypedLocation] = useState("");
 
   const [language, setLanguage] = useState("EN");
   const [showLangDropdown, setShowLangDropdown] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+
+  const locationRef = useRef(null);
+  const langRef = useRef(null);
 
   const handleSearch = () => {
     if (searchQuery.trim() === "") return alert("Please enter a search term!");
@@ -51,6 +54,40 @@ const MergedNavbar = ({ onToggleAll, onHideAll }) => {
   const filteredLocations = locationOptions.filter((loc) =>
     loc.toLowerCase().includes(typedLocation.toLowerCase())
   );
+
+  // Close location dropdown on outside click
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (locationRef.current && !locationRef.current.contains(event.target)) {
+        setShowLocationDropdown(false);
+      }
+    };
+
+    if (showLocationDropdown) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [showLocationDropdown]);
+
+  // Close language dropdown on outside click
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (langRef.current && !langRef.current.contains(event.target)) {
+        setShowLangDropdown(false);
+      }
+    };
+
+    if (showLangDropdown) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [showLangDropdown]);
 
   return (
     <>
@@ -68,7 +105,7 @@ const MergedNavbar = ({ onToggleAll, onHideAll }) => {
           </div>
 
           {/* ---- Location Dropdown ---- */}
-          <div className="relative flex items-center bg-white border border-gray-300 rounded-full shadow-sm px-4 py-1.5 hover:shadow-md transition-all duration-200 w-[200px]">
+          <div ref={locationRef} className="relative flex items-center bg-white border border-gray-300 rounded-full shadow-sm px-4 py-1.5 hover:shadow-md transition-all duration-200 w-[200px]">
             <FaMapMarkerAlt className="mr-2 w-5 h-5 text-black" />
             <input
               type="text"
@@ -131,7 +168,7 @@ const MergedNavbar = ({ onToggleAll, onHideAll }) => {
           {/* ---- Right: Language, Profile, Sell ---- */}
           <div className="flex items-center space-x-5 relative">
             {/* Language Selector */}
-            <div className="relative">
+            <div ref={langRef} className="relative">
               <button
                 onClick={() => setShowLangDropdown(!showLangDropdown)}
                 className="flex items-center text-sm text-gray-700  transition-all"
@@ -180,8 +217,8 @@ const MergedNavbar = ({ onToggleAll, onHideAll }) => {
       </header>
 
       {/* ---------- CATEGORY BAR ---------- */}
-      <nav className="bg-white mt-20 shadow-sm transition-all duration-300">
-        <div className="max-w-7xl mx-auto flex items-center justify-start overflow-x-auto scrollbar-hide px-1">
+      <nav className="bg-white mt-20 shadow-sm transition-all duration-300 ">
+        <div className="max-w-7xl mx-auto flex items-center justify-start overflow-x-auto scrollbar-hide px-1 ">
           <div className="flex  py-3 gap-1">
             {mainCategories.map(({ name, icon: Icon, path, isAll }) =>
               isAll ? (
@@ -190,9 +227,8 @@ const MergedNavbar = ({ onToggleAll, onHideAll }) => {
                   onClick={onToggleAll}
                   className="flex items-center space-x-2 text-sm md:text-base font-medium text-gray-800 px-5 py-2 rounded-full transition-all whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-[#33a3ff]"
                 >
-                  <Icon className="w-5 h-5 " />
                   <span>{name}</span>
-                  
+                  <FaChevronDown className="ml-1 w-4 h-4 text-gray-600" />
                 </button>
               ) : (
                 <Link

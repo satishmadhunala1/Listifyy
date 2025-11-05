@@ -138,7 +138,7 @@ const HeroSection = () => {
   return (
     <div className="w-full max-w-7xl mx-auto">
       {/* Carousel Container */}
-      <section className="relative w-full h-[55vh] mt-30 overflow-hidden bg-white rounded-2xl shadow-2xl border border-gray-200">
+      <section className="relative w-full h-[55vh]  overflow-hidden bg-white rounded-2xl shadow-2xl border border-gray-200">
         {/* Enhanced Left Arrow */}
         <button
           onClick={handlePrev}

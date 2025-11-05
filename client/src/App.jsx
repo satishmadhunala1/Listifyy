@@ -1,15 +1,13 @@
-<<<<<<< HEAD
 // src/App.jsx
+import React from "react";
 import { useState } from "react";
 import MergedNavbar from "./components/MergedNavbar";
 import Categories from "./components/Categories";
+import HeroSection from './components/HeroSection.jsx'
 import "./App.css";
 
-=======
-import React from 'react'
-import './App.css'
-import HeroSection from './components/HeroSection.jsx'
->>>>>>> 9592619fe940fbbab423174fbf75ebf8541597fd
+
+
 function App() {
   const [showAllCategories, setShowAllCategories] = useState(false);
 
@@ -17,7 +15,6 @@ function App() {
   const handleHideAll = () => setShowAllCategories(false);
 
   return (
-<<<<<<< HEAD
     <div className="App">
       <MergedNavbar onToggleAll={handleToggleAll} onHideAll={handleHideAll} />
       {showAllCategories && (
@@ -25,14 +22,9 @@ function App() {
           <Categories onClose={() => setShowAllCategories(false)} />
         </div>
       )}
+      <HeroSection />
     </div>
   );
-=======
-    <>
-    <HeroSection/>
-    </>
-  )
->>>>>>> 9592619fe940fbbab423174fbf75ebf8541597fd
 }
 
 export default App;
