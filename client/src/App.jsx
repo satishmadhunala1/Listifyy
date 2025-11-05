@@ -1,11 +1,11 @@
 import React from 'react'
 import './App.css'
-
+import HeroSection from './components/HeroSection.jsx'
 function App() {
 
   return (
     <>
-      <h1>hi</h1>
+    <HeroSection/>
     </>
   )
 }
