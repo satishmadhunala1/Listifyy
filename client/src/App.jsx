@@ -4,6 +4,7 @@ import { useState } from "react";
 import MergedNavbar from "./components/MergedNavbar";
 import Categories from "./components/Categories";
 import HeroSection from './components/HeroSection.jsx'
+import FreshRecommendations from "./pages/Freshrecomm.jsx";
 import "./App.css";
 
 
@@ -23,6 +24,7 @@ function App() {
         </div>
       )}
       <HeroSection />
+      <FreshRecommendations />
     </div>
   );
 }
