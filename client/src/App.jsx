@@ -3,11 +3,10 @@ import React from "react";
 import { useState } from "react";
 import MergedNavbar from "./components/MergedNavbar";
 import Categories from "./components/Categories";
-import HeroSection from './components/HeroSection.jsx'
+import HeroSection from "./components/HeroSection.jsx";
 import FreshRecommendations from "./pages/Freshrecomm.jsx";
 import "./App.css";
-
-
+import Footer from "./pages/Footer";
 
 function App() {
   const [showAllCategories, setShowAllCategories] = useState(false);
@@ -25,6 +24,7 @@ function App() {
       )}
       <HeroSection />
       <FreshRecommendations />
+      <Footer />
     </div>
   );
 }
