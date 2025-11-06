@@ -333,17 +333,17 @@ const FreshRecommendations = () => {
     <section className="bg-[#F9FAFB] text-[#1F2937] py-14 px-4 sm:px-6 lg:px-8">
       {/* Section Heading */}
       <div className="max-w-7xl mx-auto mb-10">
-        <h2 className="text-3xl font-bold text-[#2563EB] text-center">
+        <h2 className="text-3xl font-bold text-[#2563EB]">
           Fresh Recommendations
         </h2>
-        <p className="text-gray-600 text-center mt-2">
+        <p className="text-gray-600 mt-1">
           Discover amazing deals in your area
         </p>
       </div>
 
       {/* Grid Layout */}
       <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 cursor-pointer">
           {visibleItems.map((item) => (
             <ListingCard
               key={item.id}
@@ -359,7 +359,7 @@ const FreshRecommendations = () => {
           {hasMoreItems && (
             <button
               onClick={showMoreItems}
-              className="bg-[#FFCE32] hover:bg-[#FFD84D] text-[#1F2937] font-semibold px-8 py-3 rounded-xl text-lg transition-all duration-300 shadow-md hover:shadow-lg hover:scale-105 min-w-[140px]"
+              className="bg-[#FFCE32] hover:bg-[#FFD84D] text-[#1F2937] font-semibold px-8 py-3 rounded-xl text-lg transition-all duration-300 shadow-md hover:shadow-lg hover:scale-100 cursor-pointer min-w-[140px]"
             >
               Load More
             </button>
@@ -368,7 +368,7 @@ const FreshRecommendations = () => {
           {hasExtraItems && (
             <button
               onClick={showLessItems}
-              className="bg-gray-600 hover:bg-gray-700 text-white font-semibold px-8 py-3 rounded-xl text-lg transition-all duration-300 shadow-md hover:shadow-lg hover:scale-105 min-w-[140px]"
+              className="bg-gray-600 hover:bg-gray-700 text-white font-semibold px-8 py-3 rounded-xl text-lg transition-all duration-300 shadow-md hover:shadow-lg hover:scale-100 cursor-pointer min-w-[140px]"
             >
               Show Less
             </button>

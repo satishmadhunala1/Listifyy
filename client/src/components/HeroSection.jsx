@@ -45,8 +45,7 @@ const categories = [
   },
   {
     name: "Gigs",
-      img: "/gigs.jpg",
-    // img: "/gigs-bg.png",
+    img: "/gigs.jpg",
     description: "Find freelance work and short-term projects",
     offer: "Quick Jobs",
     gradient: "from-teal-600/90 to-green-600/90",
@@ -136,13 +135,36 @@ const HeroSection = () => {
   };
 
   return (
-    <div className="w-full max-w-7xl mx-auto">
+    <div className="w-full max-w-7xl mx-auto mt-40">
+      {/* Top Banner Ad - Similar to OLX */}
+      <div className="mb-6 w-full bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
+        <div className="w-full h-50    flex items-center justify-center relative">
+          {/* Ad Content */}
+          <div className="text-black text-center]">
+            <h3 className="text-xl font-bold mb-1">Special Offer!</h3>
+            <p className="text-sm opacity-90">
+              Get premium listings with 50% off
+            </p>
+          </div>
+
+          {/* Ad Badge */}
+          <div className="absolute top-2 right-2 bg-yellow-400 text-black text-xs px-2 py-1 rounded-full font-bold">
+            AD
+          </div>
+
+          {/* CTA Button */}
+          <button className="absolute bottom-3 mr-20 bg-gray-200 text-blue-600  px-4 py-1 rounded-lg text-sm font-semibold  transition-colors cursor-pointer">
+            Learn More
+          </button>
+        </div>
+      </div>
+
       {/* Carousel Container */}
-      <section className="relative w-full h-[55vh]  overflow-hidden bg-white rounded-2xl shadow-2xl border border-gray-200">
+      <section className="relative w-full h-[55vh] overflow-hidden bg-white rounded-2xl shadow-2xl border border-gray-200">
         {/* Enhanced Left Arrow */}
         <button
           onClick={handlePrev}
-          className="absolute top-1/2 transform -translate-y-1/2 z-30 bg-white/50 hover:bg-white/70 w-10 h-10 rounded-full shadow-2xl flex items-center justify-center transition-all duration-300 border border-gray-300  backdrop-blur-sm cursor-pointer"
+          className="absolute top-1/2 transform -translate-y-1/2 z-30 bg-white/50 hover:bg-white/70 w-10 h-10 rounded-full shadow-2xl flex items-center justify-center transition-all duration-300 border border-gray-300 backdrop-blur-sm cursor-pointer"
           aria-label="Previous slide"
         >
           <svg
@@ -163,7 +185,7 @@ const HeroSection = () => {
         {/* Enhanced Right Arrow */}
         <button
           onClick={handleNext}
-          className="absolute right-0 top-1/2 transform -translate-y-1/2 z-30 bg-white/50 hover:bg-white/70 w-10 h-10 rounded-full shadow-2xl flex items-center justify-center transition-all duration-300 border border-gray-300  backdrop-blur-sm cursor-pointer"
+          className="absolute right-0 top-1/2 transform -translate-y-1/2 z-30 bg-white/50 hover:bg-white/70 w-10 h-10 rounded-full shadow-2xl flex items-center justify-center transition-all duration-300 border border-gray-300 backdrop-blur-sm cursor-pointer"
           aria-label="Next slide"
         >
           <svg
@@ -211,7 +233,7 @@ const HeroSection = () => {
               <div className="relative z-10 h-full flex items-center justify-end">
                 <div className="text-white max-w-2xl mr-16 ml-auto">
                   {/* Offer Badge */}
-                  <div className="inline-flex items-center bg-white/20 backdrop-blur-sm text-white px-6 py-3 rounded-full text-lg font-bold mb-6 shadow-2xl border border-white/20  duration-300">
+                  <div className="inline-flex items-center bg-white/20 backdrop-blur-sm text-white px-6 py-3 rounded-full text-lg font-bold mb-6 shadow-2xl border border-white/20 duration-300">
                     <span className="mr-2">⭐</span>
                     {cat.offer}
                   </div>
