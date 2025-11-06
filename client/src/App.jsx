@@ -11,12 +11,10 @@ import "./App.css";
 import "./App.css";
 import Profile from "./components/UserProfile/Profile";
 import Footer from "./pages/Footer";
-import { Routes, Route } from "react-router-dom";
 // Assuming you have these components; import them as needed
 // import SignIn from "./components/SignIn";
 // import SignUp from "./components/SignUp";
 
-import Footer from "./pages/Footer";
 import HousingList from "./components/HousingList";
 import "./App.css";
 
@@ -32,11 +30,13 @@ function App() {
 
   return (
     <div className="App">
-      <Navbar 
-        onToggleAll={handleToggleAll} 
-        onHideAll={handleHideAll} 
-        isCategoriesPageOpen={showAllCategories}
-      />
+      {!isAuthPage && (
+        <Navbar 
+          onToggleAll={handleToggleAll} 
+          onHideAll={handleHideAll} 
+          isCategoriesPageOpen={showAllCategories}
+        />
+      )}
       
       {/* Full Categories Page Overlay */}
       {showAllCategories && (
@@ -47,55 +47,49 @@ function App() {
 
       {/* Main Routes - Only show when categories page is NOT open */}
       {!showAllCategories && (
-        <Routes>
-          {/* Home Page */}
-          <Route path="/" element={
-            <>
-              <HeroSection />
-              <FreshRecommendations />
-            </>
-          } />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/signin" element={
-            // <SignIn />
-            <div>Sign In Page Placeholder</div>
-          } />
-          <Route path="/signup" element={
-            // <SignUp />
-            <div>Sign Up Page Placeholder</div>
-          } />
-        </Routes>
-        {!isNoFooterPage && <Footer />}
-      </div>
-  );
-}
-
-          
-          {/* Category Pages */}
-          <Route path="/housing" element={<HousingList />} />
-          <Route path="/community" element={<Community />} />
-          <Route path="/for-sale" element={<ForSale />} />
-          <Route path="/jobs" element={<Jobs />} />
-          <Route path="/services" element={<Services />} />
-          <Route path="/gigs" element={<Gigs />} />
-          <Route path="/discussion-forums" element={<DiscussionForums />} />
-          <Route path="/resumes" element={<Resumes />} />
-          
-          {/* Individual Listing Pages */}
-          <Route path="/categories/houses/:id" element={<HousingDetail />} />
-          
-          {/* User Pages */}
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/saved" element={<SavedItems />} />
-          <Route path="/sell" element={<SellForm />} />
-          
-          {/* 404 Page */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <>
+          <Routes>
+            {/* Home Page */}
+            <Route path="/" element={
+              <>
+                <HeroSection />
+                <FreshRecommendations />
+              </>
+            } />
+            {/* Category Pages */}
+            <Route path="/housing" element={<HousingList />} />
+            <Route path="/community" element={<Community />} />
+            <Route path="/for-sale" element={<ForSale />} />
+            <Route path="/jobs" element={<Jobs />} />
+            <Route path="/services" element={<Services />} />
+            <Route path="/gigs" element={<Gigs />} />
+            <Route path="/discussion-forums" element={<DiscussionForums />} />
+            <Route path="/resumes" element={<Resumes />} />
+            
+            {/* Individual Listing Pages */}
+            <Route path="/categories/houses/:id" element={<HousingDetail />} />
+            
+            {/* User Pages */}
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/saved" element={<SavedItems />} />
+            <Route path="/sell" element={<SellForm />} />
+            
+            {/* Auth Pages */}
+            <Route path="/signin" element={
+              // <SignIn />
+              <div>Sign In Page Placeholder</div>
+            } />
+            <Route path="/signup" element={
+              // <SignUp />
+              <div>Sign Up Page Placeholder</div>
+            } />
+            
+            {/* 404 Page */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+          {!isNoFooterPage && <Footer />}
+        </>
       )}
-
-      {/* Show Footer only when categories page is NOT open */}
-      {!showAllCategories && <Footer />}
     </div>
   );
 }
@@ -169,15 +163,6 @@ const HousingDetail = () => (
     <div className="max-w-7xl mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold">Housing Detail Page</h1>
       <p>Individual housing listing page coming soon...</p>
-    </div>
-  </div>
-);
-
-const Profile = () => (
-  <div className="min-h-screen pt-24">
-    <div className="max-w-7xl mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold">User Profile</h1>
-      <p>User profile page coming soon...</p>
     </div>
   </div>
 );
