@@ -54,7 +54,6 @@ const locationData = [
 
 const languages = ["ENGLISH", "HINDI", "FRENCH"];
 
-// Only the categories will rotate, "Search for" remains fixed
 const searchCategories = [
   "Cars, Mobile Phones, Jobs...",
   "Homes, Furniture, Properties...", 
@@ -63,7 +62,7 @@ const searchCategories = [
   "Fashion, Books, Gigs..."
 ];
 
-const MergedNavbar = ({ onToggleAll, onHideAll }) => {
+const Navbar = ({ onToggleAll, onHideAll, isCategoriesPageOpen }) => {
   const [location, setLocation] = useState("India");
   const [showLocationDropdown, setShowLocationDropdown] = useState(false);
   const [typedLocation, setTypedLocation] = useState("");
@@ -75,10 +74,12 @@ const MergedNavbar = ({ onToggleAll, onHideAll }) => {
   const [currentCategoryIndex, setCurrentCategoryIndex] = useState(0);
   const [fadeClass, setFadeClass] = useState("opacity-100");
   const [showPlaceholder, setShowPlaceholder] = useState(true);
+  const [showNavbarDropdown, setShowNavbarDropdown] = useState(false);
 
   const locationRef = useRef(null);
   const langRef = useRef(null);
   const searchInputRef = useRef(null);
+  const allCategoriesRef = useRef(null);
 
   // Daily date update effect
   useEffect(() => {
@@ -104,17 +105,14 @@ const MergedNavbar = ({ onToggleAll, onHideAll }) => {
   // Smooth rotating search categories effect
   useEffect(() => {
     const interval = setInterval(() => {
-      // Start fade out
       setFadeClass("opacity-0");
-      
-      // After fade out completes, change text and fade in
       setTimeout(() => {
         setCurrentCategoryIndex((prevIndex) => 
           (prevIndex + 1) % searchCategories.length
         );
         setFadeClass("opacity-100");
-      }, 500); // Wait for fade out to complete
-    }, 3000); // Change every 3 seconds (total cycle: 3.5 seconds)
+      }, 500);
+    }, 3000);
 
     return () => clearInterval(interval);
   }, []);
@@ -127,6 +125,28 @@ const MergedNavbar = ({ onToggleAll, onHideAll }) => {
       setShowPlaceholder(true);
     }
   }, [searchQuery]);
+
+  // Close dropdowns when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (locationRef.current && !locationRef.current.contains(event.target)) {
+        setShowLocationDropdown(false);
+      }
+
+      if (langRef.current && !langRef.current.contains(event.target)) {
+        setShowLangDropdown(false);
+      }
+
+      if (allCategoriesRef.current && !allCategoriesRef.current.contains(event.target)) {
+        setShowNavbarDropdown(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const handleSearch = () => {
     if (searchQuery.trim() === "") return alert("Please enter a search term!");
@@ -148,46 +168,37 @@ const MergedNavbar = ({ onToggleAll, onHideAll }) => {
     item.cities.some(city => city.toLowerCase().includes(typedLocation.toLowerCase()))
   );
 
-  // Close location dropdown on outside click
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (locationRef.current && !locationRef.current.contains(event.target)) {
-        setShowLocationDropdown(false);
-      }
-    };
-
-    if (showLocationDropdown) {
-      document.addEventListener("mousedown", handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [showLocationDropdown]);
-
-  // Close language dropdown on outside click
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (langRef.current && !langRef.current.contains(event.target)) {
-        setShowLangDropdown(false);
-      }
-    };
-
-    if (showLangDropdown) {
-      document.addEventListener("mousedown", handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [showLangDropdown]);
-
-  // Fixed All Categories click handler
-  const handleAllCategoriesClick = (e) => {
+  // FIXED: Handle All Categories click - properly toggle between open/close
+  const handleAllCategoriesMainClick = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    if (onToggleAll) {
-      onToggleAll();
+    
+    if (isCategoriesPageOpen) {
+      // If categories page is already open, close it
+      if (onHideAll) {
+        onHideAll();
+      }
+    } else {
+      // If categories page is closed, open it
+      setShowNavbarDropdown(false); // Close navbar dropdown when opening full page
+      if (onToggleAll) {
+        onToggleAll();
+      }
+    }
+  };
+
+  // Handle hover to show navbar dropdown
+  const handleMouseEnter = () => {
+    if (!isCategoriesPageOpen) {
+      setShowNavbarDropdown(true);
+    }
+  };
+
+  // Handle category selection from dropdown
+  const handleCategorySelect = (category) => {
+    setShowNavbarDropdown(false);
+    if (onHideAll) {
+      onHideAll();
     }
   };
 
@@ -405,28 +416,59 @@ const MergedNavbar = ({ onToggleAll, onHideAll }) => {
       <nav className="bg-white mt-20 shadow-sm transition-all duration-300 absolute -top-1 z-40 w-full fixed">
         <div className="px-5 flex items-center justify-start overflow-x-auto scrollbar-hide ">
           <div className="flex py-3 gap-1">
-            {mainCategories.map(({ name, icon: Icon, path, isAll }) =>
-              isAll ? (
-                <button
-                  key={name}
-                  onClick={handleAllCategoriesClick}
-                  className="flex items-center space-x-2 text-sm md:text-base font-medium text-gray-800 px-5 py-2 rounded-full transition-all whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-[#33a3ff] hover:bg-gray-100"
-                >
-                  <span>{name}</span>
-                  <FaChevronDown className="ml-1 w-4 h-4 text-gray-600" />
-                </button>
-              ) : (
-                <Link
-                  key={name}
-                  to={path}
-                  onClick={onHideAll}
-                  className="flex items-center space-x-2 text-sm md:text-base font-medium text-gray-800 px-5 py-2 rounded-full transition-all whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-[#33a3ff] hover:bg-gray-100"
-                >
-                  <Icon className="w-5 h-5" />
-                  <span>{name}</span>
-                </Link>
-              )
-            )}
+            {/* All Categories with Dropdown */}
+            <div 
+              ref={allCategoriesRef} 
+              className="relative"
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={() => setShowNavbarDropdown(false)}
+            >
+              <button
+                onClick={handleAllCategoriesMainClick}
+                className="flex items-center space-x-2 text-sm md:text-base font-medium text-gray-800 px-5 py-2 rounded-full transition-all whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-[#33a3ff] hover:bg-gray-100"
+              >
+                <span>All Categories</span>
+                <FaChevronDown 
+                  className={`ml-1 w-4 h-4 text-gray-600 transition-transform duration-200 ${
+                    showNavbarDropdown || isCategoriesPageOpen ? "rotate-180" : "rotate-0"
+                  }`}
+                />
+              </button>
+
+              {/* All Categories Dropdown - Only show when NOT in full Categories page */}
+              {showNavbarDropdown && !isCategoriesPageOpen && (
+                <div className="absolute left-0 top-full mt-2 w-64 bg-white border border-gray-200 rounded-lg shadow-xl z-50 animate-fadeIn">
+                  <div className="py-2">
+                    {mainCategories.filter(cat => !cat.isAll).map((category) => {
+                      const IconComponent = category.icon;
+                      return (
+                        <button
+                          key={category.name}
+                          onClick={() => handleCategorySelect(category)}
+                          className="flex items-center space-x-3 w-full px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-all duration-200 cursor-pointer"
+                        >
+                          <IconComponent className="w-4 h-4" />
+                          <span>{category.name}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Other Categories */}
+            {mainCategories.filter(cat => !cat.isAll).map(({ name, icon: Icon, path }) => (
+              <Link
+                key={name}
+                to={path}
+                onClick={onHideAll}
+                className="flex items-center space-x-2 text-sm md:text-base font-medium text-gray-800 px-5 py-2 rounded-full transition-all whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-[#33a3ff] hover:bg-gray-100"
+              >
+                <Icon className="w-5 h-5" />
+                <span>{name}</span>
+              </Link>
+            ))}
 
             {/* Vertical line separator */}
             <div className="border-l border-gray-300 h-6 my-auto mx-2"></div>
@@ -446,4 +488,4 @@ const MergedNavbar = ({ onToggleAll, onHideAll }) => {
   );
 };
 
-export default MergedNavbar;
+export default Navbar;

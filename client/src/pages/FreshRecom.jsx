@@ -12,7 +12,7 @@ const listingsData = [
     location: "Nerul, Navi Mumbai",
     date: "2024-01-12",
     featured: true,
-    img: "https://images.unsplash.com/photo-1621135802920-133df2871bef?auto=format&fit=crop&w=600&h=400&q=80",
+    img: "https://images.pexels.com/photos/34054731/pexels-photo-34054731.jpeg?auto=compress&cs=tinysrgb&w=600&h=400",
     rating: 4,
   },
   {
@@ -24,7 +24,7 @@ const listingsData = [
     location: "Kolhapur, Maharashtra",
     date: "2024-01-11",
     featured: true,
-    img: "https://images.unsplash.com/photo-1605559424843-9e4c9a1a0f67?auto=format&fit=crop&w=600&h=400&q=80",
+    img: "https://images.pexels.com/photos/17042848/pexels-photo-17042848.jpeg?auto=compress&cs=tinysrgb&w=600&h=400",
     rating: 5,
   },
   {
@@ -36,7 +36,7 @@ const listingsData = [
     location: "Pune, Maharashtra",
     date: "2024-01-10",
     featured: false,
-    img: "https://images.unsplash.com/photo-1588776814546-79a7d8c7db7d?auto=format&fit=crop&w=600&h=400&q=80",
+    img: "https://images.pexels.com/photos/30166362/pexels-photo-30166362.jpeg?auto=compress&cs=tinysrgb&w=600&h=400",
     rating: 4,
   },
   {
@@ -48,7 +48,7 @@ const listingsData = [
     location: "Bengaluru, Karnataka",
     date: "2024-01-09",
     featured: true,
-    img: "https://images.unsplash.com/photo-1606144042614-4d9a38cb1e8b?auto=format&fit=crop&w=600&h=400&q=80",
+    img: "https://images.pexels.com/photos/5054181/pexels-photo-5054181.jpeg?auto=compress&cs=tinysrgb&w=600&h=400",
     rating: 5,
   },
   {
@@ -168,7 +168,7 @@ const listingsData = [
     location: "Mumbai, Maharashtra",
     date: "2023-12-30",
     featured: false,
-    img: "https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&w=600&h=400&q=80",
+    img: "https://images.pexels.com/photos/34557912/pexels-photo-34557912.jpeg?auto=compress&cs=tinysrgb&w=600&h=400",
     rating: 4,
   },
   {
@@ -192,7 +192,7 @@ const listingsData = [
     location: "Bengaluru, Karnataka",
     date: "2023-12-28",
     featured: true,
-    img: "https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&w=600&h=400&q=80",
+    img: "https://images.pexels.com/photos/31078734/pexels-photo-31078734.jpeg?auto=compress&cs=tinysrgb&w=600&h=400",
     rating: 5,
   },
 ];
