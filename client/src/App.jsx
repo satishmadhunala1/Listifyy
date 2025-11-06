@@ -6,6 +6,10 @@ import Categories from "./components/Categories";
 import HeroSection from './components/HeroSection.jsx'
 import FreshRecommendations from "./pages/FreshRecom.jsx";
 import "./App.css";
+import HeroSection from "./components/HeroSection.jsx";
+import FreshRecommendations from "./pages/Freshrecomm.jsx";
+import "./App.css";
+import Footer from "./pages/Footer";
 
 function App() {
   const [showAllCategories, setShowAllCategories] = useState(false);
@@ -27,6 +31,7 @@ function App() {
       )}
       <HeroSection />
       <FreshRecommendations />
+      <Footer />
     </div>
   );
 }
