@@ -416,7 +416,7 @@ const Navbar = ({ onToggleAll, onHideAll, isCategoriesPageOpen }) => {
             >
               <button
                 onClick={handleAllCategoriesMainClick}
-                className="flex items-center space-x-2 text-sm md:text-base font-medium text-gray-800 px-5 py-2 rounded-full transition-all whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-[#33a3ff] hover:bg-gray-100"
+                className="flex items-center space-x-2 text-sm md:text-base font-medium text-gray-800 px-5 py-2 rounded-full transition-all whitespace-nowrap"
               >
                 <span>All Categories</span>
                 <FaChevronDown 
