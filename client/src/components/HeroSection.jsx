@@ -230,7 +230,7 @@ const HeroSection = () => {
               </div>
 
               {/* Content Container - Right Side Text */}
-              <div className="relative z-10 h-full flex items-center justify-end">
+              <div className="relative z-10 h-full flex items-center justify-end mt-5">
                 <div className="text-white max-w-2xl mr-16 ml-auto">
                   {/* Offer Badge */}
                   <div className="inline-flex items-center bg-white/20 backdrop-blur-sm text-white px-6 py-3 rounded-full text-lg font-bold mb-6 shadow-2xl border border-white/20 duration-300">
