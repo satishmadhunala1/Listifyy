@@ -464,7 +464,7 @@ function HousingList() {
 
   // Handle card click to navigate to details
   const handleCardClick = (houseId) => {
-    navigate(`/property/${houseId}`);
+    navigate(`/housing/${houseId}`);
   };
 
   // small helper to show count with fallback 0
@@ -557,12 +557,64 @@ function HousingList() {
   return (
     <>
       <style>{sliderCSS}</style>
-      <div className="min-h-screen bg-gray-50 pt-24">
+      <div className="max-w-7xl mx-auto bg-white pt-24 mt-10   ">
         {/* Header */}
-        <div className="bg-white border-b border-gray-200">
-          <div className="max-w-7xl mx-auto px-4 py-4">
+          <div className=" px-4 py-4">
             {/* Breadcrumb Navigation */}
-            <div className="flex items-center space-x-2 text-sm text-gray-500 mb-3">
+         
+
+            {/* Simple Popular Searches - just text */}
+            {/* <div className="mb-3">
+              <span className="text-sm text-gray-600">
+                <span className="text-black font-medium">
+                  Popular Searches:
+                </span>{" "}
+                {popularCities.join(", ")}
+              </span>
+            </div> */}
+
+            {/* Title Section */}
+            {/* <div className="mb-4">
+              <h1 className="text-2xl font-bold text-gray-900 mb-2">
+                {category ? currentCategory.name : "Flats for Rent"}: Houses,
+                Apartments and Flats{" "}
+                {category === "apts-for-rent"
+                  ? "for rent"
+                  : category === "real-estate-for-sale"
+                  ? "for sale"
+                  : "available"}{" "}
+                in Kerala
+              </h1>
+            </div> */}
+        </div>
+
+        {/* Top filter bar */}
+        <div className=" flex  sticky top-24 z-30">
+          <div className=" px-4">
+            <div className="flex flex-wrap items-end justify-end py-3">
+              {/* <div className="flex items-center gap-4">
+                <span className="text-sm font-medium text-gray-700">
+                  Properties for{" "}
+                  {listingType === "all" ? "Rent & Sale" : listingType}
+                </span>
+                <span className="text-sm text-gray-600">
+                  {sortedHouses.length} properties found
+                </span>
+              </div> */}
+
+              
+
+
+
+            </div>
+          </div>
+        </div>
+
+
+<div className="flex items-center justify-between  w-full gap-4">
+
+
+     <div className="flex items-center space-x-2 text-md">
               <Link to="/" className="hover:text-[#2563EB]">
                 Home
               </Link>
@@ -579,49 +631,8 @@ function HousingList() {
                 </>
               )}
             </div>
-
-            {/* Simple Popular Searches - just text */}
-            <div className="mb-3">
-              <span className="text-sm text-gray-600">
-                <span className="text-black font-medium">
-                  Popular Searches:
-                </span>{" "}
-                {popularCities.join(", ")}
-              </span>
-            </div>
-
-            {/* Title Section */}
-            <div className="mb-4">
-              <h1 className="text-2xl font-bold text-gray-900 mb-2">
-                {category ? currentCategory.name : "Flats for Rent"}: Houses,
-                Apartments and Flats{" "}
-                {category === "apts-for-rent"
-                  ? "for rent"
-                  : category === "real-estate-for-sale"
-                  ? "for sale"
-                  : "available"}{" "}
-                in Kerala
-              </h1>
-            </div>
-          </div>
-        </div>
-
-        {/* Top filter bar */}
-        <div className="bg-white border-b border-gray-200 sticky top-24 z-30">
-          <div className="max-w-7xl mx-auto px-4">
-            <div className="flex flex-wrap items-center justify-between py-3">
-              <div className="flex items-center gap-4">
-                <span className="text-sm font-medium text-gray-700">
-                  Properties for{" "}
-                  {listingType === "all" ? "Rent & Sale" : listingType}
-                </span>
-                <span className="text-sm text-gray-600">
-                  {sortedHouses.length} properties found
-                </span>
-              </div>
-
-              <div className="flex items-center gap-4">
-                <button
+               <div>
+                 <button
                   onClick={() => setShowFilters(!showFilters)}
                   className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 text-gray-700 font-medium text-sm lg:hidden"
                 >
@@ -638,13 +649,12 @@ function HousingList() {
                   <option value="price-low">Price: Low to High</option>
                   <option value="price-high">Price: High to Low</option>
                 </select>
+               </div>
               </div>
-            </div>
-          </div>
-        </div>
+
 
         {/* Main container: Sidebar + Content */}
-        <div className="max-w-7xl mx-auto px-4 py-6 lg:flex gap-6">
+        <div className=" px-4 py-6 lg:flex gap-6">
           {/* Sidebar - shown on lg as left column; on mobile it's a sliding panel when showFilters */}
           <aside
             className={`${
@@ -660,6 +670,51 @@ function HousingList() {
                 >
                   Close
                 </button>
+              </div>
+
+
+               {/* Categories / Property Types */}
+              <div className="border-t border-gray-100 pt-7 mt-3">
+                <button
+                  className="w-full flex items-center justify-between text-left"
+                  onClick={() =>
+                    setOpenSections((prev) => ({
+                      ...prev,
+                      categories: !prev.categories,
+                    }))
+                  }
+                >
+                  <span className="text-sm font-medium">Categories</span>
+                  <ChevronDown
+                    className={`w-4 h-4 transform transition-transform ${
+                      openSections.categories ? "rotate-180" : ""
+                    }`}
+                  />
+                </button>
+
+                {openSections.categories && (
+                  <div className="mt-3 max-h-48 overflow-y-auto pr-2 custom-scrollbar">
+                    {propertyTypeOptions.map((pt) => (
+                      <label
+                        key={pt}
+                        className="flex items-center justify-between py-2 text-sm text-gray-700"
+                      >
+                        <div className="flex items-center space-x-2">
+                          <input
+                            type="checkbox"
+                            checked={propertyTypesSelected.has(pt)}
+                            onChange={() => togglePropertyType(pt)}
+                            className="w-4 h-4 border-gray-300 rounded-sm"
+                          />
+                          <span className="capitalize">{pt}</span>
+                        </div>
+                        <span className="text-gray-400 text-xs">
+                          ({cnt(counts.propertyTypes, pt)})
+                        </span>
+                      </label>
+                    ))}
+                  </div>
+                )}
               </div>
 
               {/* Listing Type */}
@@ -744,51 +799,7 @@ function HousingList() {
                 )}
               </div>
 
-              <div className="bg-gray-400 w-full h-[1px] my-5" />
 
-              {/* Categories / Property Types */}
-              <div className="border-t border-gray-100 pt-7 mt-3">
-                <button
-                  className="w-full flex items-center justify-between text-left"
-                  onClick={() =>
-                    setOpenSections((prev) => ({
-                      ...prev,
-                      categories: !prev.categories,
-                    }))
-                  }
-                >
-                  <span className="text-sm font-medium">Categories</span>
-                  <ChevronDown
-                    className={`w-4 h-4 transform transition-transform ${
-                      openSections.categories ? "rotate-180" : ""
-                    }`}
-                  />
-                </button>
-
-                {openSections.categories && (
-                  <div className="mt-3 max-h-48 overflow-y-auto pr-2 custom-scrollbar">
-                    {propertyTypeOptions.map((pt) => (
-                      <label
-                        key={pt}
-                        className="flex items-center justify-between py-2 text-sm text-gray-700"
-                      >
-                        <div className="flex items-center space-x-2">
-                          <input
-                            type="checkbox"
-                            checked={propertyTypesSelected.has(pt)}
-                            onChange={() => togglePropertyType(pt)}
-                            className="w-4 h-4 border-gray-300 rounded-sm"
-                          />
-                          <span className="capitalize">{pt}</span>
-                        </div>
-                        <span className="text-gray-400 text-xs">
-                          ({cnt(counts.propertyTypes, pt)})
-                        </span>
-                      </label>
-                    ))}
-                  </div>
-                )}
-              </div>
 
               <div className="bg-gray-400 w-full h-[1px] my-5" />
 

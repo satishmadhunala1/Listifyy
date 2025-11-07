@@ -21,6 +21,7 @@ import {
   Building,
   Ruler,
   Shield,
+  ChevronRight as ChevronRightSmall,
 } from "lucide-react";
 import { housingData } from "../jsonData/index.js";
 
@@ -163,7 +164,7 @@ function HousingDetails() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center ">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#2563EB] mx-auto mb-4"></div>
           <p className="text-gray-600 text-lg">Loading property details...</p>
@@ -174,7 +175,7 @@ function HousingDetails() {
 
   if (error || !house) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center ">
         <div className="text-center">
           <Home className="w-16 h-16 text-gray-400 mx-auto mb-4" />
           <h2 className="text-2xl font-bold text-gray-900 mb-2">
@@ -206,19 +207,25 @@ function HousingDetails() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-24">
-      {/* Header Navigation */}
-      <div className="bg-white border-b border-gray-200">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <Link
-              to="/housing"
-              className="inline-flex items-center text-[#2563EB] font-medium hover:text-[#1D4ED8] transition-colors"
-            >
-              <ArrowLeft className="w-5 h-5 mr-2" />
-              Back to Properties
+    <div className="max-w-7xl mx-auto pt-24 mt-10   ">
+      {/* Header - Breadcrumb Navigation (matching HousingList style) */}
+      <div className="flex items-center mt-4 justify-between  ">
+          {/* Breadcrumb Navigation */}
+          <div className="flex items-center space-x-2 text-md text-gray-500">
+            <Link to="/" className="hover:text-[#2563EB]">
+              Home
             </Link>
+            <ChevronRightSmall className="w-4 h-4" />
+            <Link to="/housing" className="hover:text-[#2563EB]">
+              Housing
+            </Link>
+            <ChevronRightSmall className="w-4 h-4" />
+            <span className="text-gray-900 font-medium line-clamp-1">
+              {house.title}
+            </span>
+        </div>
 
+      {/* Header Navigation (existing, with share/save) */}
             <div className="flex items-center gap-3">
               <button
                 onClick={shareProperty}
@@ -226,7 +233,7 @@ function HousingDetails() {
               >
                 <Share2 className="w-5 h-5" />
                 {showShareMenu && (
-                  <div className="absolute top-full right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-10">
+                  <div className="absolute top-full right-0 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-10">
                     <button
                       onClick={copyLink}
                       className="w-full px-4 py-3 text-left hover:bg-gray-50 rounded-t-lg flex items-center gap-3"
@@ -256,12 +263,10 @@ function HousingDetails() {
                 </span>
               </button>
             </div>
-          </div>
-        </div>
-      </div>
+    </div>
 
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex flex-col lg:flex-row gap-8">
+
+        <div className="flex flex-col lg:flex-row gap-8 pt-4">
           {/* Main Content - 2/3 width */}
           <div className="lg:w-2/3">
             {/* Image Gallery - Modern Style */}
@@ -772,7 +777,7 @@ function HousingDetails() {
                 {similarProperties.map((similarHouse) => (
                   <Link
                     key={similarHouse.id}
-                    to={`/property/${similarHouse.id}`}
+                    to={`/housing/${similarHouse.id}`}
                     className="block p-4 hover:bg-gray-50 transition-colors border-b border-gray-100 last:border-b-0"
                   >
                     <div className="flex gap-3">
@@ -848,7 +853,6 @@ function HousingDetails() {
             </div>
           </div>
         </div>
-      </div>
     </div>
   );
 }

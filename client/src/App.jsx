@@ -115,7 +115,7 @@ function App() {
 
             {/* Individual Listing Pages */}
             <Route path="/categories/houses/:id" element={<HousingDetail />} />
-            <Route path="/property/:id" element={<HousingDetails />} />
+            <Route path="/housing/:id" element={<HousingDetails />} />
 
             {/* User Pages */}
             <Route path="/profile" element={<Profile />} />
