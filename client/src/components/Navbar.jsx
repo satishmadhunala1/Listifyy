@@ -1,3 +1,4 @@
+// src/components/Navbar.jsx
 import { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
@@ -21,7 +22,24 @@ const mainCategories = [
   { name: "All Categories", icon: FaTh, isAll: true },
   { name: "Community", icon: FaUsers, path: "/community" },
   { name: "For Sale", icon: FaShoppingBag, path: "/for-sale" },
-  { name: "Housing", icon: FaHome, path: "/housing" },
+  {
+    name: "Housing",
+    icon: FaHome,
+    path: "/housing",
+    hasSubcategories: true,
+    subcategories: [
+      { name: "Apts/Housing for Rent", path: "/housing/apts-for-rent" },
+      { name: "Housing Swap", path: "/housing/housing-swap" },
+      { name: "Housing Wanted", path: "/housing/housing-wanted" },
+      { name: "Office/Commercial", path: "/housing/office-commercial" },
+      { name: "Parking & Storage", path: "/housing/parking-storage" },
+      { name: "Real Estate", path: "/housing/real-estate" },
+      { name: "Real Estate for Sale", path: "/housing/real-estate-for-sale" },
+      { name: "Real Estate Wanted", path: "/housing/real-estate-wanted" },
+      { name: "Rooms & Temporary", path: "/housing/rooms-temporary" },
+      { name: "Vacation Rentals", path: "/housing/vacation-rentals" },
+    ],
+  },
   { name: "Jobs", icon: FaBriefcase, path: "/jobs" },
   { name: "Resumes", icon: FaBriefcase, path: "/resumes" },
   { name: "Gigs", icon: FaBriefcase, path: "/gigs" },
@@ -32,34 +50,34 @@ const mainCategories = [
 const locationData = [
   {
     country: "India",
-    cities: ["Mumbai", "Delhi", "Bangalore", "Chennai", "Kolkata", "Hyderabad"]
+    cities: ["Mumbai", "Delhi", "Bangalore", "Chennai", "Kolkata", "Hyderabad"],
   },
   {
-    country: "USA", 
-    cities: ["New York", "Los Angeles", "Chicago", "Houston", "Phoenix"]
+    country: "USA",
+    cities: ["New York", "Los Angeles", "Chicago", "Houston", "Phoenix"],
   },
   {
     country: "UK",
-    cities: ["London", "Manchester", "Birmingham", "Liverpool", "Glasgow"]
+    cities: ["London", "Manchester", "Birmingham", "Liverpool", "Glasgow"],
   },
   {
     country: "Canada",
-    cities: ["Toronto", "Vancouver", "Montreal", "Calgary", "Ottawa"]
+    cities: ["Toronto", "Vancouver", "Montreal", "Calgary", "Ottawa"],
   },
   {
     country: "Australia",
-    cities: ["Sydney", "Melbourne", "Brisbane", "Perth", "Adelaide"]
-  }
+    cities: ["Sydney", "Melbourne", "Brisbane", "Perth", "Adelaide"],
+  },
 ];
 
 const languages = ["ENGLISH", "HINDI", "FRENCH"];
 
 const searchCategories = [
   "Cars, Mobile Phones, Jobs...",
-  "Homes, Furniture, Properties...", 
+  "Homes, Furniture, Properties...",
   "Jobs, Resumes, Services...",
   "Bikes, Electronics, Community...",
-  "Fashion, Books, Gigs..."
+  "Fashion, Books, Gigs...",
 ];
 
 const Navbar = ({ onToggleAll, onHideAll, isCategoriesPageOpen }) => {
@@ -75,11 +93,13 @@ const Navbar = ({ onToggleAll, onHideAll, isCategoriesPageOpen }) => {
   const [fadeClass, setFadeClass] = useState("opacity-100");
   const [showPlaceholder, setShowPlaceholder] = useState(true);
   const [showNavbarDropdown, setShowNavbarDropdown] = useState(false);
+  const [hoveredCategory, setHoveredCategory] = useState(null);
 
   const locationRef = useRef(null);
   const langRef = useRef(null);
   const searchInputRef = useRef(null);
   const allCategoriesRef = useRef(null);
+  const categoryBarRef = useRef(null);
 
   // Daily date update effect
   useEffect(() => {
@@ -107,8 +127,8 @@ const Navbar = ({ onToggleAll, onHideAll, isCategoriesPageOpen }) => {
     const interval = setInterval(() => {
       setFadeClass("opacity-0");
       setTimeout(() => {
-        setCurrentCategoryIndex((prevIndex) => 
-          (prevIndex + 1) % searchCategories.length
+        setCurrentCategoryIndex(
+          (prevIndex) => (prevIndex + 1) % searchCategories.length
         );
         setFadeClass("opacity-100");
       }, 500);
@@ -137,8 +157,18 @@ const Navbar = ({ onToggleAll, onHideAll, isCategoriesPageOpen }) => {
         setShowLangDropdown(false);
       }
 
-      if (allCategoriesRef.current && !allCategoriesRef.current.contains(event.target)) {
+      if (
+        allCategoriesRef.current &&
+        !allCategoriesRef.current.contains(event.target)
+      ) {
         setShowNavbarDropdown(false);
+      }
+
+      if (
+        categoryBarRef.current &&
+        !categoryBarRef.current.contains(event.target)
+      ) {
+        setHoveredCategory(null);
       }
     };
 
@@ -163,16 +193,20 @@ const Navbar = ({ onToggleAll, onHideAll, isCategoriesPageOpen }) => {
   };
 
   // Filter locations based on search
-  const filteredLocations = locationData.filter(item =>
-    item.country.toLowerCase().includes(typedLocation.toLowerCase()) ||
-    item.cities.some(city => city.toLowerCase().includes(typedLocation.toLowerCase()))
+  const filteredLocations = locationData.filter(
+    (item) =>
+      item.country.toLowerCase().includes(typedLocation.toLowerCase()) ||
+      item.cities.some((city) =>
+        city.toLowerCase().includes(typedLocation.toLowerCase())
+      )
   );
 
   // Handle All Categories click - opens full Categories page
   const handleAllCategoriesMainClick = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    setShowNavbarDropdown(false); // Close navbar dropdown when opening full page
+    setShowNavbarDropdown(false);
+    setHoveredCategory(null);
     if (onToggleAll) {
       onToggleAll();
     }
@@ -188,9 +222,24 @@ const Navbar = ({ onToggleAll, onHideAll, isCategoriesPageOpen }) => {
   // Handle category selection from dropdown
   const handleCategorySelect = (category) => {
     setShowNavbarDropdown(false);
+    setHoveredCategory(null);
     if (onHideAll) {
       onHideAll();
     }
+  };
+
+  // Handle housing category hover
+  const handleHousingHover = (category) => {
+    if (category.hasSubcategories) {
+      setHoveredCategory(category);
+    }
+  };
+
+  // Handle housing category leave
+  const handleHousingLeave = () => {
+    setTimeout(() => {
+      setHoveredCategory(null);
+    }, 200);
   };
 
   return (
@@ -253,34 +302,44 @@ const Navbar = ({ onToggleAll, onHideAll, isCategoriesPageOpen }) => {
                   {typedLocation ? (
                     // Search Results
                     <div>
-                      <h3 className="text-sm font-semibold text-gray-700 mb-3">Search Results</h3>
+                      <h3 className="text-sm font-semibold text-gray-700 mb-3">
+                        Search Results
+                      </h3>
                       {filteredLocations.length > 0 ? (
                         filteredLocations.map((item) => (
                           <div key={item.country} className="mb-4 last:mb-0">
                             <div className="flex items-center mb-2">
                               <FaMapMarkerAlt className="mr-2 text-gray-500 w-4 h-4" />
-                              <span className="font-medium text-gray-800">{item.country}</span>
+                              <span className="font-medium text-gray-800">
+                                {item.country}
+                              </span>
                             </div>
                             <div className="ml-6 space-y-1">
                               {item.cities
-                                .filter(city => 
-                                  city.toLowerCase().includes(typedLocation.toLowerCase()) ||
-                                  item.country.toLowerCase().includes(typedLocation.toLowerCase())
+                                .filter(
+                                  (city) =>
+                                    city
+                                      .toLowerCase()
+                                      .includes(typedLocation.toLowerCase()) ||
+                                    item.country
+                                      .toLowerCase()
+                                      .includes(typedLocation.toLowerCase())
                                 )
                                 .map((city) => (
                                   <button
                                     key={city}
                                     onClick={() => {
                                       setLocation(`${city}, ${item.country}`);
-                                      setTypedLocation(`${city}, ${item.country}`);
+                                      setTypedLocation(
+                                        `${city}, ${item.country}`
+                                      );
                                       setShowLocationDropdown(false);
                                     }}
                                     className="block w-full text-left px-2 py-1 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-colors"
                                   >
                                     {city}
                                   </button>
-                                ))
-                              }
+                                ))}
                             </div>
                           </div>
                         ))
@@ -293,12 +352,16 @@ const Navbar = ({ onToggleAll, onHideAll, isCategoriesPageOpen }) => {
                   ) : (
                     // Popular Locations
                     <div>
-                      <h3 className="text-sm font-semibold text-gray-700 mb-3">POPULAR LOCATIONS</h3>
+                      <h3 className="text-sm font-semibold text-gray-700 mb-3">
+                        POPULAR LOCATIONS
+                      </h3>
                       {locationData.map((item) => (
                         <div key={item.country} className="mb-4 last:mb-0">
                           <div className="flex items-center mb-2">
                             <FaMapMarkerAlt className="mr-2 text-gray-500 w-4 h-4" />
-                            <span className="font-medium text-gray-800">{item.country}</span>
+                            <span className="font-medium text-gray-800">
+                              {item.country}
+                            </span>
                           </div>
                           <div className="ml-6 space-y-1">
                             {item.cities.map((city) => (
@@ -338,7 +401,9 @@ const Navbar = ({ onToggleAll, onHideAll, isCategoriesPageOpen }) => {
                 <div className="absolute inset-0 flex items-center pointer-events-none">
                   <span className="text-gray-500 px-4 py-2 text-sm md:text-base">
                     Search for{" "}
-                    <span className={`text-gray-500 transition-opacity duration-1000 ease-in-out ${fadeClass}`}>
+                    <span
+                      className={`text-gray-500 transition-opacity duration-1000 ease-in-out ${fadeClass}`}
+                    >
                       {searchCategories[currentCategoryIndex]}
                     </span>
                   </span>
@@ -377,8 +442,8 @@ const Navbar = ({ onToggleAll, onHideAll, isCategoriesPageOpen }) => {
                       key={lang}
                       onClick={() => handleLanguageChange(lang)}
                       className={`block w-full text-left px-4 py-2 text-sm cursor-pointer transition-colors duration-200 ${
-                        lang === language 
-                          ? "bg-blue-50 text-blue-600 font-medium" 
+                        lang === language
+                          ? "bg-blue-50 text-blue-600 font-medium"
                           : "text-gray-700 hover:bg-gray-100"
                       }`}
                     >
@@ -404,12 +469,15 @@ const Navbar = ({ onToggleAll, onHideAll, isCategoriesPageOpen }) => {
       </header>
 
       {/* ---------- CATEGORY BAR ---------- */}
-      <nav className="bg-white mt-20 shadow-sm transition-all duration-300 absolute -top-1 z-40 w-full fixed">
+      <nav
+        ref={categoryBarRef}
+        className="bg-white mt-20 shadow-sm transition-all duration-300 absolute -top-1 z-40 w-full fixed"
+      >
         <div className="px-5 flex items-center justify-start overflow-x-auto scrollbar-hide ">
           <div className="flex py-3 gap-1">
             {/* All Categories with Dropdown */}
-            <div 
-              ref={allCategoriesRef} 
+            <div
+              ref={allCategoriesRef}
               className="relative"
               onMouseEnter={handleMouseEnter}
               onMouseLeave={() => setShowNavbarDropdown(false)}
@@ -419,9 +487,11 @@ const Navbar = ({ onToggleAll, onHideAll, isCategoriesPageOpen }) => {
                 className="flex items-center space-x-2 text-sm md:text-base font-medium text-gray-800 px-5 py-2 rounded-full transition-all whitespace-nowrap"
               >
                 <span>All Categories</span>
-                <FaChevronDown 
+                <FaChevronDown
                   className={`ml-1 w-4 h-4 text-gray-600 transition-transform duration-200 ${
-                    showNavbarDropdown || isCategoriesPageOpen ? "rotate-180" : "rotate-0"
+                    showNavbarDropdown || isCategoriesPageOpen
+                      ? "rotate-180"
+                      : "rotate-0"
                   }`}
                 />
               </button>
@@ -430,36 +500,86 @@ const Navbar = ({ onToggleAll, onHideAll, isCategoriesPageOpen }) => {
               {showNavbarDropdown && !isCategoriesPageOpen && (
                 <div className="absolute left-0 top-full mt-2 w-64 bg-white border border-gray-200 rounded-lg shadow-xl z-50 animate-fadeIn">
                   <div className="py-2">
-                    {mainCategories.filter(cat => !cat.isAll).map((category) => {
-                      const IconComponent = category.icon;
-                      return (
-                        <button
-                          key={category.name}
-                          onClick={() => handleCategorySelect(category)}
-                          className="flex items-center space-x-3 w-full px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-all duration-200 cursor-pointer"
-                        >
-                          <IconComponent className="w-4 h-4" />
-                          <span>{category.name}</span>
-                        </button>
-                      );
-                    })}
+                    {mainCategories
+                      .filter((cat) => !cat.isAll)
+                      .map((category) => {
+                        const IconComponent = category.icon;
+                        return (
+                          <button
+                            key={category.name}
+                            onClick={() => handleCategorySelect(category)}
+                            className="flex items-center space-x-3 w-full px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-all duration-200 cursor-pointer"
+                          >
+                            <IconComponent className="w-4 h-4" />
+                            <span>{category.name}</span>
+                          </button>
+                        );
+                      })}
                   </div>
                 </div>
               )}
             </div>
 
-            {/* Other Categories */}
-            {mainCategories.filter(cat => !cat.isAll).map(({ name, icon: Icon, path }) => (
-              <Link
-                key={name}
-                to={path}
-                onClick={onHideAll}
-                className="flex items-center space-x-2 text-sm md:text-base font-medium text-gray-800 px-5 py-2 rounded-full transition-all whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-[#33a3ff] hover:bg-gray-100"
-              >
-                <Icon className="w-5 h-5" />
-                <span>{name}</span>
-              </Link>
-            ))}
+            {/* Other Categories with Housing Subcategories */}
+            {mainCategories
+              .filter((cat) => !cat.isAll)
+              .map((category) => {
+                const IconComponent = category.icon;
+
+                if (category.hasSubcategories) {
+                  return (
+                    <div
+                      key={category.name}
+                      className="relative"
+                      onMouseEnter={() => handleHousingHover(category)}
+                      onMouseLeave={handleHousingLeave}
+                    >
+                      <Link
+                        to={category.path}
+                        onClick={onHideAll}
+                        className="flex items-center space-x-2 text-sm md:text-base font-medium text-gray-800 px-5 py-2 rounded-full transition-all whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-[#33a3ff] hover:bg-gray-100"
+                      >
+                        <IconComponent className="w-5 h-5" />
+                        <span>{category.name}</span>
+                        <FaChevronDown className="w-3 h-3 text-gray-500" />
+                      </Link>
+
+                      {/* Housing Subcategories Dropdown */}
+                      {hoveredCategory?.name === category.name && (
+                        <div className="absolute left-0 top-full mt-1 w-64 bg-white border border-gray-200 rounded-lg shadow-xl z-50 animate-fadeIn">
+                          <div className="py-2">
+                            {category.subcategories.map((subcategory) => (
+                              <Link
+                                key={subcategory.name}
+                                to={subcategory.path}
+                                onClick={() => {
+                                  setHoveredCategory(null);
+                                  if (onHideAll) onHideAll();
+                                }}
+                                className="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-all duration-200 cursor-pointer"
+                              >
+                                {subcategory.name}
+                              </Link>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  );
+                }
+
+                return (
+                  <Link
+                    key={category.name}
+                    to={category.path}
+                    onClick={onHideAll}
+                    className="flex items-center space-x-2 text-sm md:text-base font-medium text-gray-800 px-5 py-2 rounded-full transition-all whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-[#33a3ff] hover:bg-gray-100"
+                  >
+                    <IconComponent className="w-5 h-5" />
+                    <span>{category.name}</span>
+                  </Link>
+                );
+              })}
 
             {/* Vertical line separator */}
             <div className="border-l border-gray-300 h-6 my-auto mx-2"></div>
