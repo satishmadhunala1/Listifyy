@@ -10,6 +10,7 @@ import FreshRecommendations from "./pages/FreshRecom.jsx";
 import "./App.css";
 import "./App.css";
 import Profile from "./components/UserProfile/Profile";
+import Sell from "./components/Sell";
 import Footer from "./pages/Footer";
 // Assuming you have these components; import them as needed
 // import SignIn from "./components/SignIn";
@@ -65,6 +66,7 @@ function App() {
             <Route path="/gigs" element={<Gigs />} />
             <Route path="/discussion-forums" element={<DiscussionForums />} />
             <Route path="/resumes" element={<Resumes />} />
+            <Route path="/sell" element={<Sell />} />
             
             {/* Individual Listing Pages */}
             <Route path="/categories/houses/:id" element={<HousingDetail />} />

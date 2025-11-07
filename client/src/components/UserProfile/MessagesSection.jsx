@@ -88,7 +88,7 @@ const MessagesSection = ({ messages }) => {
               <div
                 className={`max-w-xs lg:max-w-md px-4 py-2 rounded-2xl text-sm shadow-sm ${
                   msg.sender === "me"
-                    ? "bg-[#2F3A63] text-white rounded-br-sm"
+                    ? "bg-blue-600 text-white rounded-br-sm"
                     : "bg-white text-gray-900 rounded-bl-sm border border-gray-200"
                 }`}
               >
@@ -113,9 +113,9 @@ const MessagesSection = ({ messages }) => {
             <input
               type="text"
               placeholder="Type a message..."
-              className="flex-1 px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#59B2CE] focus:border-transparent transition-all shadow-sm"
+              className="flex-1 px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-300 focus:border-blue-500 transition-all"
             />
-            <button className="w-10 h-10 bg-[#2F3A63] text-white rounded-xl flex items-center justify-center hover:bg-[#5669A4] transition-colors shadow-md flex-shrink-0">
+            <button className="w-10 h-10 bg-blue-600 text-white rounded-lg flex items-center justify-center hover:bg-blue-700 transition-colors flex-shrink-0">
               <MessageCircle className="w-5 h-5" />
             </button>
           </div>
@@ -134,13 +134,13 @@ const MessagesSection = ({ messages }) => {
             Stay connected with your clients
           </p>
         </div>
-        <button className="px-4 py-2 bg-[#2F3A63] text-white rounded-xl hover:bg-[#5669A4] transition-colors font-medium flex items-center gap-2 shadow-md hover:shadow-lg w-full sm:w-auto">
+        <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center gap-2 border border-blue-600 w-full sm:w-auto">
           <MessageCircle className="w-4 h-4" />
           New Message
         </button>
       </div>
 
-      <div className="flex flex-col sm:flex-row h-[600px] bg-white rounded-2xl shadow-md overflow-hidden">
+      <div className="flex flex-col sm:flex-row h-[600px] bg-white border border-gray-200 rounded-lg overflow-hidden">
 
         <div
           className={`w-full sm:w-80 border-r border-gray-100 flex flex-col h-full ${
@@ -158,7 +158,7 @@ const MessagesSection = ({ messages }) => {
                 onClick={() => handleChatSelect(conv.name)}
                 className={`p-4 border-b border-gray-100 cursor-pointer hover:bg-gray-50 flex items-center justify-between transition-colors ${
                   conv.name === selectedChat
-                    ? "bg-[#A9E4FB]/10 border-r-2 border-[#59B2CE]"
+                    ? "bg-blue-50 border-r-2 border-blue-300"
                     : ""
                 }`}
               >
@@ -183,7 +183,7 @@ const MessagesSection = ({ messages }) => {
                   </div>
                 </div>
                 {conv.unread && (
-                  <div className="w-2 h-2 bg-[#2F3A63] rounded-full flex-shrink-0"></div>
+                  <div className="w-2 h-2 bg-blue-600 rounded-full flex-shrink-0"></div>
                 )}
               </div>
             ))}
@@ -193,7 +193,7 @@ const MessagesSection = ({ messages }) => {
         
         <div
           className={`flex-1 flex flex-col h-full ${
-            isChatOpen ? "hidden sm:flex" : "hidden sm:flex"
+            selectedChat ? "flex" : "hidden sm:flex"
           }`}
         >
           {selectedChat && selectedConversation ? (
@@ -220,7 +220,7 @@ const MessagesSection = ({ messages }) => {
               </div>
 
            
-              <div className="flex-1 overflow-y-auto p-4 space-y-4">
+              <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50">
                 {sampleChatHistory.map((msg, index) => (
                   <div
                     key={index}
@@ -231,7 +231,7 @@ const MessagesSection = ({ messages }) => {
                     <div
                       className={`max-w-xs lg:max-w-md px-4 py-2 rounded-2xl text-sm shadow-sm ${
                         msg.sender === "me"
-                          ? "bg-[#2F3A63] text-white rounded-br-sm"
+                          ? "bg-blue-600 text-white rounded-br-sm"
                           : "bg-gray-200 text-gray-900 rounded-bl-sm"
                       }`}
                     >
@@ -250,9 +250,9 @@ const MessagesSection = ({ messages }) => {
                   <input
                     type="text"
                     placeholder="Type a message..."
-                    className="flex-1 px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#59B2CE] focus:border-transparent transition-all shadow-sm"
+                    className="flex-1 px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-300 focus:border-blue-500 transition-all"
                   />
-                  <button className="w-10 h-10 bg-[#2F3A63] text-white rounded-xl flex items-center justify-center hover:bg-[#5669A4] transition-colors shadow-md flex-shrink-0">
+                  <button className="w-10 h-10 bg-blue-600 text-white rounded-lg flex items-center justify-center hover:bg-blue-700 transition-colors flex-shrink-0">
                     <MessageCircle className="w-5 h-5" />
                   </button>
                 </div>

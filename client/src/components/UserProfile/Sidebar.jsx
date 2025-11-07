@@ -41,7 +41,7 @@ const Sidebar = ({ activeSection, setActiveSection, counts, isMobileMenuOpen, se
 
       {/* Sidebar */}
       <div className={`
-        fixed lg:static lg:mt-20 top-16 lg:top-0 left-0   w-64  text-black h-[calc(100vh-4rem)] lg:h-screen rounded-2xl py-4 pl-4
+        fixed lg:static lg:mt-20 top-16 lg:top-0 left-0   w-64  text-black h-[calc(100vh-4rem)] lg:h-screen rounded-lg py-4 pl-4
         transition-transform duration-300 ease-in-out z-0
         ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
       `}>
@@ -54,20 +54,20 @@ const Sidebar = ({ activeSection, setActiveSection, counts, isMobileMenuOpen, se
                 setActiveSection(item.id);
                 setIsMobileMenuOpen(false);
               }}
-              className={`w-full flex items-center justify-between px-4 py-3 rounded-tl-full rounded-bl-full transition-all text-left  ${
+              className={`w-full flex items-center justify-between px-4 py-3 rounded-tl-lg rounded-bl-lg transition-all text-left  ${
                 activeSection === item.id
-                  ? "bg-gray-100 w-full text-black  pl-4 pt-4"
-                  : "text-black hover:bg-[#F5F6F7] hover:text-black"
+                  ? "bg-blue-50 w-full text-blue-900  pl-4 pt-4"
+                  : "text-black hover:bg-gray-50 hover:text-black"
               }`}
             >
               <div className="flex items-center gap-3 min-w-0">
-                <item.icon className={`w-5 h-5 flex-shrink-0   ${activeSection === item.id ? 'text-[#2F3A63]' : ''}`} />
+                <item.icon className={`w-5 h-5 flex-shrink-0   ${activeSection === item.id ? 'text-blue-600' : ''}`} />
                 <span className="font-medium truncate">{item.label}</span>
               </div>
               {item.count !== undefined && (
                 <span className={`text-xs font-semibold px-2 py-1 rounded-full transition-transform duration-300 flex-shrink-0 ${
                   activeSection === item.id 
-                    ? 'bg-[#2F3A63] text-white ' 
+                    ? 'bg-blue-600 text-white ' 
                     : 'bg-gray-200 text-gray-600'
                 }`}>
                   {item.count}
@@ -83,7 +83,7 @@ const Sidebar = ({ activeSection, setActiveSection, counts, isMobileMenuOpen, se
                 window.location.href = '/';
               }, 500);
             }}
-            className="w-full absolute flex items-center gap-3 px-4 py-3 rounded-xl text-red-600 hover:bg-red-50 transition-all"
+            className="w-full absolute flex items-center gap-3 px-4 py-3 rounded-lg text-red-600 hover:bg-red-50 transition-all"
           >
             <LogOut className="w-5 h-5 flex-shrink-0" />
             <span className="font-medium">Logout</span>

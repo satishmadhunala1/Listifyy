@@ -4,7 +4,7 @@ import { ChevronDown, FileText } from "lucide-react";
 import PropertyCard from "./PropertyCard";
 
 const RightProfileSection = ({ user, profilePic, myPosts, onToggleSave }) => (
-  <aside className="hidden lg:block lg:w-80 bg-white rounded-2xl shadow-xl p-6 space-y-6 mt-20">
+  <aside className="hidden lg:block lg:w-80 bg-white border border-gray-200 rounded-lg p-6 space-y-6 mt-20">
     {/* Profile Card */}
     <div className="flex items-center gap-3 pb-6 border-b border-gray-100">
       <img 

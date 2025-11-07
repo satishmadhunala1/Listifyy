@@ -19,19 +19,19 @@ const HomeSection = ({ savedHouses, myPosts, myAlerts, messages, agendaEvents, o
       <StatsCard 
         title="Saved Items" 
         value={savedHouses.length} 
-        color="bg-[#A9E4FB]/20 border-[#A9E4FB]/50" 
+        color="bg-blue-50 border-blue-200" 
         icon={Heart} 
       />
       <StatsCard 
         title="My Posts" 
         value={myPosts.length} 
-        color="bg-[#59B2CE]/20 border-[#59B2CE]/50" 
+        color="bg-blue-100 border-blue-300" 
         icon={FileText} 
       />
       <StatsCard 
         title="Active Alerts" 
         value={myAlerts.length} 
-        color="bg-[#2F3A63]/10 border-[#2F3A63]/20" 
+        color="bg-blue-50 border-blue-100" 
         icon={Bell} 
       />
     </div>

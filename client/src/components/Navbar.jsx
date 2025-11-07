@@ -74,12 +74,10 @@ const Navbar = ({ onToggleAll, onHideAll, isCategoriesPageOpen }) => {
   const [currentCategoryIndex, setCurrentCategoryIndex] = useState(0);
   const [fadeClass, setFadeClass] = useState("opacity-100");
   const [showPlaceholder, setShowPlaceholder] = useState(true);
-  const [showNavbarDropdown, setShowNavbarDropdown] = useState(false);
 
   const locationRef = useRef(null);
   const langRef = useRef(null);
   const searchInputRef = useRef(null);
-  const allCategoriesRef = useRef(null);
 
   // Daily date update effect
   useEffect(() => {
@@ -136,10 +134,6 @@ const Navbar = ({ onToggleAll, onHideAll, isCategoriesPageOpen }) => {
       if (langRef.current && !langRef.current.contains(event.target)) {
         setShowLangDropdown(false);
       }
-
-      if (allCategoriesRef.current && !allCategoriesRef.current.contains(event.target)) {
-        setShowNavbarDropdown(false);
-      }
     };
 
     document.addEventListener("mousedown", handleClickOutside);
@@ -172,24 +166,8 @@ const Navbar = ({ onToggleAll, onHideAll, isCategoriesPageOpen }) => {
   const handleAllCategoriesMainClick = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    setShowNavbarDropdown(false); // Close navbar dropdown when opening full page
     if (onToggleAll) {
       onToggleAll();
-    }
-  };
-
-  // Handle hover to show navbar dropdown
-  const handleMouseEnter = () => {
-    if (!isCategoriesPageOpen) {
-      setShowNavbarDropdown(true);
-    }
-  };
-
-  // Handle category selection from dropdown
-  const handleCategorySelect = (category) => {
-    setShowNavbarDropdown(false);
-    if (onHideAll) {
-      onHideAll();
     }
   };
 
@@ -395,10 +373,12 @@ const Navbar = ({ onToggleAll, onHideAll, isCategoriesPageOpen }) => {
             </Link>
 
             {/* Sell Button */}
-            <ShimmerButton className="flex items-center gap-3">
-              <FaPlusCircle size={20} className="" />
-              <p className="text-[16px]">Sell</p>
-            </ShimmerButton>
+            <Link to="/sell">
+              <ShimmerButton className="flex items-center gap-3">
+                <FaPlusCircle size={20} className="" />
+                <p className="text-[16px]">Sell</p>
+              </ShimmerButton>
+            </Link>
           </div>
         </div>
       </header>
@@ -407,45 +387,19 @@ const Navbar = ({ onToggleAll, onHideAll, isCategoriesPageOpen }) => {
       <nav className="bg-white mt-20 shadow-sm transition-all duration-300 absolute -top-1 z-40 w-full fixed">
         <div className="px-5 flex items-center justify-start overflow-x-auto scrollbar-hide ">
           <div className="flex py-3 gap-1">
-            {/* All Categories with Dropdown */}
-            <div 
-              ref={allCategoriesRef} 
-              className="relative"
-              onMouseEnter={handleMouseEnter}
-              onMouseLeave={() => setShowNavbarDropdown(false)}
-            >
+            {/* All Categories without Dropdown */}
+            <div className="relative">
               <button
                 onClick={handleAllCategoriesMainClick}
-                className="flex items-center space-x-2 text-sm md:text-base font-medium text-gray-800 px-5 py-2 rounded-full transition-all whitespace-nowrap"
+                className="flex items-center space-x-2 text-sm md:text-base font-medium text-gray-800 px-5 py-2 rounded-full transition-all whitespace-nowrap hover:bg-gray-100"
               >
                 <span>All Categories</span>
                 <FaChevronDown 
                   className={`ml-1 w-4 h-4 text-gray-600 transition-transform duration-200 ${
-                    showNavbarDropdown || isCategoriesPageOpen ? "rotate-180" : "rotate-0"
+                    isCategoriesPageOpen ? "rotate-180" : "rotate-0"
                   }`}
                 />
               </button>
-
-              {/* All Categories Dropdown - Only show when NOT in full Categories page */}
-              {showNavbarDropdown && !isCategoriesPageOpen && (
-                <div className="absolute left-0 top-full mt-2 w-64 bg-white border border-gray-200 rounded-lg shadow-xl z-50 animate-fadeIn">
-                  <div className="py-2">
-                    {mainCategories.filter(cat => !cat.isAll).map((category) => {
-                      const IconComponent = category.icon;
-                      return (
-                        <button
-                          key={category.name}
-                          onClick={() => handleCategorySelect(category)}
-                          className="flex items-center space-x-3 w-full px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-all duration-200 cursor-pointer"
-                        >
-                          <IconComponent className="w-4 h-4" />
-                          <span>{category.name}</span>
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
             </div>
 
             {/* Other Categories */}

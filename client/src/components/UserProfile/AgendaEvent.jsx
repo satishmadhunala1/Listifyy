@@ -2,7 +2,7 @@
 import React from "react";
 
 const AgendaEvent = ({ event, day }) => (
-  <div className={`rounded-xl p-3 mt-1 shadow-sm ${event.group ? 'bg-blue-50 border border-blue-200' : 'bg-[#2F3A63]/5 border border-[#2F3A63]/20'}`}>
+  <div className={`rounded-lg p-3 mt-1 border border-gray-200 ${event.group ? 'bg-blue-50 border-blue-200' : 'bg-blue-50 border-blue-100'}`}>
     <div className="flex items-center justify-between text-xs text-gray-600">
       <span className="truncate">{event.time}</span>
       {event.group ? (
