@@ -1,23 +1,29 @@
 // components/Sidebar.jsx
 import React from "react";
-import { 
+import {
   Home,
-  User, 
-  Settings, 
-  Heart, 
-  Shield, 
-  LogOut, 
+  User,
+  Settings,
+  Heart,
+  Shield,
+  LogOut,
   FileText,
   MessageCircle,
   Activity,
   Menu,
-  X
+  X,
 } from "lucide-react";
 
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const Sidebar = ({ activeSection, setActiveSection, counts, isMobileMenuOpen, setIsMobileMenuOpen }) => {
+const Sidebar = ({
+  activeSection,
+  setActiveSection,
+  counts,
+  isMobileMenuOpen,
+  setIsMobileMenuOpen,
+}) => {
   const menuItems = [
     { id: "home", label: "Home", icon: Home },
     { id: "personal", label: "Personal Details", icon: User },
@@ -33,20 +39,25 @@ const Sidebar = ({ activeSection, setActiveSection, counts, isMobileMenuOpen, se
     <>
       {/* Overlay */}
       {isMobileMenuOpen && (
-        <div 
+        <div
           className="lg:hidden fixed inset-0 bg-black/50 z-40  "
           onClick={() => setIsMobileMenuOpen(false)}
         />
       )}
 
       {/* Sidebar */}
-      <div className={`
+      <div
+        className={`
         fixed lg:static lg:mt-20 top-16 lg:top-0 left-0   w-64  text-black h-[calc(100vh-4rem)] lg:h-screen rounded-lg py-4 pl-4
         transition-transform duration-300 ease-in-out z-0
-        ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
-      `}>
-        
-        <nav className="space-y-2">
+        ${
+          isMobileMenuOpen
+            ? "translate-x-0"
+            : "-translate-x-full lg:translate-x-0"
+        }
+      `}
+      >
+        <nav className="space-y-2"> 
           {menuItems.map((item) => (
             <button
               key={item.id}
@@ -61,15 +72,21 @@ const Sidebar = ({ activeSection, setActiveSection, counts, isMobileMenuOpen, se
               }`}
             >
               <div className="flex items-center gap-3 min-w-0">
-                <item.icon className={`w-5 h-5 flex-shrink-0   ${activeSection === item.id ? 'text-blue-600' : ''}`} />
+                <item.icon
+                  className={`w-5 h-5 flex-shrink-0   ${
+                    activeSection === item.id ? "text-blue-600" : ""
+                  }`}
+                />
                 <span className="font-medium truncate">{item.label}</span>
               </div>
               {item.count !== undefined && (
-                <span className={`text-xs font-semibold px-2 py-1 rounded-full transition-transform duration-300 flex-shrink-0 ${
-                  activeSection === item.id 
-                    ? 'bg-blue-600 text-white ' 
-                    : 'bg-gray-200 text-gray-600'
-                }`}>
+                <span
+                  className={`text-xs font-semibold px-2 py-1 rounded-full transition-transform duration-300 flex-shrink-0 ${
+                    activeSection === item.id
+                      ? "bg-blue-600 text-white "
+                      : "bg-gray-200 text-gray-600"
+                  }`}
+                >
                   {item.count}
                 </span>
               )}
@@ -77,10 +94,10 @@ const Sidebar = ({ activeSection, setActiveSection, counts, isMobileMenuOpen, se
           ))}
           <button
             onClick={() => {
-              localStorage.removeItem('user');
+              localStorage.removeItem("user");
               toast.success("Logged out successfully.");
               setTimeout(() => {
-                window.location.href = '/';
+                window.location.href = "/";
               }, 500);
             }}
             className="w-full absolute flex items-center gap-3 px-4 py-3 rounded-lg text-red-600 hover:bg-red-50 transition-all"
