@@ -557,21 +557,21 @@ function HousingList() {
   return (
     <>
       <style>{sliderCSS}</style>
-      <div className="max-w-7xl mx-auto bg-white pt-24 mt-10   ">
+      <div className="max-w-7xl mx-auto  pt-24 mt-10   ">
         {/* Header */}
           <div className=" px-4 py-4">
             {/* Breadcrumb Navigation */}
          
 
             {/* Simple Popular Searches - just text */}
-            {/* <div className="mb-3">
+            <div className="mb-3">
               <span className="text-sm text-gray-600">
                 <span className="text-black font-medium">
                   Popular Searches:
                 </span>{" "}
                 {popularCities.join(", ")}
               </span>
-            </div> */}
+            </div>
 
             {/* Title Section */}
             {/* <div className="mb-4">

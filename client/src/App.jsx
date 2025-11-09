@@ -1,24 +1,38 @@
 // src/App.jsx
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Categories from "./components/Categories";
 import HeroSection from "./components/HeroSection.jsx";
 import FreshRecommendations from "./pages/FreshRecom.jsx";
-import "./App.css";
 import Profile from "./components/UserProfile/Profile";
 import Sell from "./components/Sell";
 import Footer from "./pages/Footer";
 
+// Import Housing Components
 import HousingList from "./components/HousingList";
 import HousingDetails from "./components/HousingDetails";
+
+// Import Community Components
+import CommunityList from "./components/CommunityList";
+import CommunityDetails from "./components/CommunityDetails";
+
 import "./App.css";
 
 function App() {
   const [showAllCategories, setShowAllCategories] = useState(false);
   const location = useLocation();
+
+  // Auto-scroll to top on route change
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: "smooth",
+    });
+  }, [location.pathname]);
 
   const handleToggleAll = () => setShowAllCategories(!showAllCategories);
   const handleHideAll = () => setShowAllCategories(false);
@@ -102,8 +116,42 @@ function App() {
               element={<HousingList category="vacation-rentals" />}
             />
 
+            {/* Community Category Pages */}
+            <Route path="/community" element={<CommunityList />} />
+            <Route
+              path="/community/community-events"
+              element={<CommunityList category="community-events" />}
+            />
+            <Route
+              path="/community/volunteer-opportunities"
+              element={<CommunityList category="volunteer-opportunities" />}
+            />
+            <Route
+              path="/community/classes-workshops"
+              element={<CommunityList category="classes-workshops" />}
+            />
+            <Route
+              path="/community/activities-groups"
+              element={<CommunityList category="activities-groups" />}
+            />
+            <Route
+              path="/community/lost-found"
+              element={<CommunityList category="lost-found" />}
+            />
+            <Route
+              path="/community/local-news"
+              element={<CommunityList category="local-news" />}
+            />
+            <Route
+              path="/community/general-community"
+              element={<CommunityList category="general-community" />}
+            />
+
+            {/* Individual Listing Pages */}
+            <Route path="/housing/:id" element={<HousingDetails />} />
+            <Route path="/community/:id" element={<CommunityDetails />} />
+
             {/* Other Category Pages */}
-            <Route path="/community" element={<Community />} />
             <Route path="/for-sale" element={<ForSale />} />
             <Route path="/jobs" element={<Jobs />} />
             <Route path="/services" element={<Services />} />
@@ -111,16 +159,10 @@ function App() {
             <Route path="/discussion-forums" element={<DiscussionForums />} />
             <Route path="/resumes" element={<Resumes />} />
             <Route path="/sell" element={<Sell />} />
-            
-
-            {/* Individual Listing Pages */}
-            <Route path="/categories/houses/:id" element={<HousingDetail />} />
-            <Route path="/housing/:id" element={<HousingDetails />} />
 
             {/* User Pages */}
             <Route path="/profile" element={<Profile />} />
             <Route path="/saved" element={<SavedItems />} />
-            <Route path="/sell" element={<SellForm />} />
 
             {/* Auth Pages */}
             <Route
@@ -143,15 +185,6 @@ function App() {
 }
 
 // Placeholder components for routes that don't exist yet
-const Community = () => (
-  <div className="min-h-screen pt-24">
-    <div className="max-w-7xl mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold">Community</h1>
-      <p>Community page coming soon...</p>
-    </div>
-  </div>
-);
-
 const ForSale = () => (
   <div className="min-h-screen pt-24">
     <div className="max-w-7xl mx-auto px-4 py-8">
@@ -206,29 +239,11 @@ const Resumes = () => (
   </div>
 );
 
-const HousingDetail = () => (
-  <div className="min-h-screen pt-24">
-    <div className="max-w-7xl mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold">Housing Detail Page</h1>
-      <p>Individual housing listing page coming soon...</p>
-    </div>
-  </div>
-);
-
 const SavedItems = () => (
   <div className="min-h-screen pt-24">
     <div className="max-w-7xl mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold">Saved Items</h1>
       <p>Saved items page coming soon...</p>
-    </div>
-  </div>
-);
-
-const SellForm = () => (
-  <div className="min-h-screen pt-24">
-    <div className="max-w-7xl mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold">Sell an Item</h1>
-      <p>Sell form page coming soon...</p>
     </div>
   </div>
 );
