@@ -111,11 +111,11 @@ function SalesDetails() {
 
   useEffect(() => {
     const loadSaved = () => {
-      const saved = JSON.parse(localStorage.getItem('savedItems') || '[]');
+      const saved = JSON.parse(localStorage.getItem("savedItems") || "[]");
       setSavedItems(saved);
     };
-    window.addEventListener('savedItemsChanged', loadSaved);
-    return () => window.removeEventListener('savedItemsChanged', loadSaved);
+    window.addEventListener("savedItemsChanged", loadSaved);
+    return () => window.removeEventListener("savedItemsChanged", loadSaved);
   }, []);
 
   const isSaved = savedItems.some((h) => h.id === sale?.id);
@@ -130,7 +130,7 @@ function SalesDetails() {
     }
     setSavedItems(newSaved);
     localStorage.setItem("savedItems", JSON.stringify(newSaved));
-    window.dispatchEvent(new CustomEvent('savedItemsChanged'));
+    window.dispatchEvent(new CustomEvent("savedItemsChanged"));
   };
 
   const shareProperty = () => {
@@ -314,543 +314,549 @@ function SalesDetails() {
     <div className="max-w-7xl mx-auto pt-24 mt-10   ">
       {/* Header - Breadcrumb Navigation (matching HousingList style) */}
       <div className="flex items-center mt-4 justify-between  ">
-          {/* Breadcrumb Navigation */}
-          <div className="flex items-center space-x-2 text-md text-gray-500">
-            <Link to="/" className="hover:text-[#2563EB]">
-              Home
-            </Link>
-            <ChevronRightSmall className="w-4 h-4" />
-            <Link to="/for-sale" className="hover:text-[#2563EB]">
-              Marketplace
-            </Link>
-            <ChevronRightSmall className="w-4 h-4" />
-            <span className="text-gray-900 font-medium line-clamp-1">
-              {sale.title}
-            </span>
+        {/* Breadcrumb Navigation */}
+        <div className="flex items-center space-x-2 text-md text-gray-500">
+          <Link to="/" className="hover:text-[#2563EB]">
+            Home
+          </Link>
+          <ChevronRightSmall className="w-4 h-4" />
+          <Link to="/for-sale" className="hover:text-[#2563EB]">
+            Marketplace
+          </Link>
+          <ChevronRightSmall className="w-4 h-4" />
+          <span className="text-gray-900 font-medium line-clamp-1">
+            {sale.title}
+          </span>
         </div>
 
-      {/* Header Navigation (existing, with share/save) */}
-            <div className="flex items-center gap-3">
-              <button
-                onClick={shareProperty}
-                className="p-2 text-gray-600 hover:text-[#2563EB] transition-colors relative"
-              >
-                <Share2 className="w-5 h-5" />
-                {showShareMenu && (
-                  <div className="absolute top-full right-0 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-10">
-                    <button
-                      onClick={copyLink}
-                      className="w-full px-4 py-3 text-left hover:bg-gray-50 rounded-t-lg flex items-center gap-3"
-                    >
-                      <ExternalLink className="w-4 h-4" />
-                      Copy Link
-                    </button>
-                    <button className="w-full px-4 py-3 text-left hover:bg-gray-50 rounded-b-lg flex items-center gap-3">
-                      <Mail className="w-4 h-4" />
-                      Share via Email
-                    </button>
-                  </div>
-                )}
-              </button>
+        {/* Header Navigation (existing, with share/save) */}
+        <div className="flex items-center gap-3">
+          <button
+            onClick={shareProperty}
+            className="p-2 text-gray-600 hover:text-[#2563EB] transition-colors relative"
+          >
+            <Share2 className="w-5 h-5" />
+            {showShareMenu && (
+              <div className="absolute top-full right-0 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-10">
+                <button
+                  onClick={copyLink}
+                  className="w-full px-4 py-3 text-left hover:bg-gray-50 rounded-t-lg flex items-center gap-3"
+                >
+                  <ExternalLink className="w-4 h-4" />
+                  Copy Link
+                </button>
+                <button className="w-full px-4 py-3 text-left hover:bg-gray-50 rounded-b-lg flex items-center gap-3">
+                  <Mail className="w-4 h-4" />
+                  Share via Email
+                </button>
+              </div>
+            )}
+          </button>
 
-              <button
-                onClick={toggleSave}
-                className={`p-2 rounded-lg transition-colors flex items-center gap-2 ${
-                  isSaved
-                    ? "bg-red-50 text-red-600 border border-red-200"
-                    : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                }`}
-              >
-                <Heart className={`w-5 h-5 ${isSaved ? "fill-red-600" : ""}`} />
-                <span className="hidden sm:inline font-medium">
-                  {isSaved ? "Saved" : "Save"}
+          <button
+            onClick={toggleSave}
+            className={`p-2 rounded-lg transition-colors flex items-center gap-2 ${
+              isSaved
+                ? "bg-red-50 text-red-600 border border-red-200"
+                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+            }`}
+          >
+            <Heart className={`w-5 h-5 ${isSaved ? "fill-red-600" : ""}`} />
+            <span className="hidden sm:inline font-medium">
+              {isSaved ? "Saved" : "Save"}
+            </span>
+          </button>
+        </div>
+      </div>
+
+      <div className="flex flex-col lg:flex-row gap-8 pt-4">
+        {/* Main Content - 2/3 width */}
+        <div className="lg:w-2/3">
+          {/* Image Gallery - Modern Style */}
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mb-6">
+            <div className="relative">
+              <img
+                src={selectedImage}
+                alt={sale.title}
+                className="w-full h-96 object-cover"
+              />
+              <div className="absolute bottom-4 left-4 flex gap-2">
+                <span
+                  className={`px-3 py-1.5 rounded-full text-sm font-medium ${typeInfo.color}`}
+                >
+                  {typeInfo.text}
                 </span>
-              </button>
-            </div>
-    </div>
-
-
-        <div className="flex flex-col lg:flex-row gap-8 pt-4">
-          {/* Main Content - 2/3 width */}
-          <div className="lg:w-2/3">
-            {/* Image Gallery - Modern Style */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mb-6">
-              <div className="relative">
-                <img
-                  src={selectedImage}
-                  alt={sale.title}
-                  className="w-full h-96 object-cover"
-                />
-                <div className="absolute bottom-4 left-4 flex gap-2">
-                  <span
-                    className={`px-3 py-1.5 rounded-full text-sm font-medium ${typeInfo.color}`}
-                  >
-                    {typeInfo.text}
-                  </span>
-                  <span className={`px-3 py-1.5 rounded-full text-sm font-medium ${conditionColor}`}>
-                    {sale.condition || "Unknown"}
-                  </span>
-                </div>
-              </div>
-
-              {/* Thumbnail Gallery */}
-              <div className="p-4 grid grid-cols-4 gap-3">
-                {displayImages.map((img, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setSelectedImage(img)}
-                    className={`rounded-lg overflow-hidden border-2 transition-all ${
-                      selectedImage === img
-                        ? "border-[#2563EB] ring-2 ring-[#2563EB] ring-opacity-20"
-                        : "border-gray-200 hover:border-gray-300"
-                    }`}
-                  >
-                    <img
-                      src={img}
-                      alt={`${sale.title} - ${index + 1}`}
-                      className="w-full h-24 object-cover"
-                    />
-                  </button>
-                ))}
+                <span
+                  className={`px-3 py-1.5 rounded-full text-sm font-medium ${conditionColor}`}
+                >
+                  {sale.condition || "Unknown"}
+                </span>
               </div>
             </div>
 
-            {/* Item Details */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-              {/* Header with Price and Title */}
-              <div className="p-6 border-b border-gray-200">
-                <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-6">
-                  <div className="flex-1">
-                    <h1 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-2">
-                      {sale.title}
-                    </h1>
-                    <div className="flex items-center gap-2 text-gray-600">
-                      <MapPin className="w-4 h-4" />
-                      <span className="font-medium">{sale.location}</span>
-                    </div>
+            {/* Thumbnail Gallery */}
+            <div className="p-4 grid grid-cols-4 gap-3">
+              {displayImages.map((img, index) => (
+                <button
+                  key={index}
+                  onClick={() => setSelectedImage(img)}
+                  className={`rounded-lg overflow-hidden border-2 transition-all ${
+                    selectedImage === img
+                      ? "border-[#2563EB] ring-2 ring-[#2563EB] ring-opacity-20"
+                      : "border-gray-200 hover:border-gray-300"
+                  }`}
+                >
+                  <img
+                    src={img}
+                    alt={`${sale.title} - ${index + 1}`}
+                    className="w-full h-24 object-cover"
+                  />
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Item Details */}
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            {/* Header with Price and Title */}
+            <div className="p-6 border-b border-gray-200">
+              <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-6">
+                <div className="flex-1">
+                  <h1 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-2">
+                    {sale.title}
+                  </h1>
+                  <div className="flex items-center gap-2 text-gray-600">
+                    <MapPin className="w-4 h-4" />
+                    <span className="font-medium">{sale.location}</span>
                   </div>
+                </div>
 
-                  <div className="text-right">
-                    <div className={`text-3xl font-bold text-[#2563EB] mb-1 ${
+                <div className="text-right">
+                  <div
+                    className={`text-3xl font-bold text-[#2563EB] mb-1 ${
                       sale.price === "Free"
                         ? "text-green-600"
                         : sale.price === "Negotiable"
                         ? "text-blue-600"
                         : ""
-                    }`}>
-                      {sale.price}
-                    </div>
-                    <div className="text-sm text-gray-500">
-                      {sale.type === "free"
-                        ? "Free Item"
-                        : sale.type === "wanted"
-                        ? "Price Negotiable"
-                        : "Sale Price"}
-                    </div>
+                    }`}
+                  >
+                    {sale.price}
+                  </div>
+                  <div className="text-sm text-gray-500">
+                    {sale.type === "free"
+                      ? "Free Item"
+                      : sale.type === "wanted"
+                      ? "Price Negotiable"
+                      : "Sale Price"}
                   </div>
                 </div>
+              </div>
 
-                {/* Enhanced Item Stats */}
-                <div className="bg-gray-50 rounded-lg p-3">
-                  <div className="grid lg:grid-cols-5 md:grid-cols-3 grid-cols-1 text-center">
-                    {/* Condition */}
-                    <div className="flex flex-col items-center">
-                      <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center mb-2 border border-gray-200">
-                        <Shield className="w-6 h-6 text-[#2563EB]" />
-                      </div>
-                      <div className="text-sm text-gray-600 mb-1">Condition</div>
-                      <div className="font-semibold text-gray-900">
-                        {itemDetails.condition}
-                      </div>
+              {/* Enhanced Item Stats */}
+              <div className="bg-gray-50 rounded-lg p-3">
+                <div className="grid lg:grid-cols-5 md:grid-cols-3 grid-cols-1 text-center">
+                  {/* Condition */}
+                  <div className="flex flex-col items-center">
+                    <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center mb-2 border border-gray-200">
+                      <Shield className="w-6 h-6 text-[#2563EB]" />
                     </div>
-
-                    {/* Vertical Divider */}
-                    <div className="hidden md:flex items-center justify-center">
-                      <div className="w-px h-12 bg-gray-300"></div>
-                    </div>
-
-                    {/* Category */}
-                    <div className="flex flex-col items-center">
-                      <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center mb-2 border border-gray-200">
-                        <Package className="w-6 h-6 text-[#2563EB]" />
-                      </div>
-                      <div className="text-sm text-gray-600 mb-1">Category</div>
-                      <div className="font-semibold text-gray-900">
-                        {sale.category || "General"}
-                      </div>
-                    </div>
-
-                    {/* Vertical Divider */}
-                    <div className="hidden md:flex items-center justify-center">
-                      <div className="w-px h-12 bg-gray-300"></div>
-                    </div>
-
-                    {/* Status */}
-                    <div className="flex flex-col items-center">
-                      <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center mb-2 border border-gray-200">
-                        <CheckCircle className="w-6 h-6 text-[#2563EB]" />
-                      </div>
-                      <div className="text-sm text-gray-600 mb-1">Status</div>
-                      <div className="font-semibold text-gray-900">
-                        Available
-                      </div>
-                    </div>
-
-                    {/* Vertical Divider */}
-                    <div className="hidden md:flex items-center justify-center">
-                      <div className="w-px h-12 bg-gray-300"></div>
-                    </div>
-
-                    {/* Type */}
-                    <div className="flex flex-col items-center col-span-2 md:col-span-1 mt-4 md:mt-0">
-                      <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center mb-2 border border-gray-200">
-                        <Package className="w-6 h-6 text-[#2563EB]" />
-                      </div>
-                      <div className="text-sm text-gray-600 mb-1">Type</div>
-                      <div className="font-semibold text-gray-900">
-                        {itemDetails.priceType}
-                      </div>
+                    <div className="text-sm text-gray-600 mb-1">Condition</div>
+                    <div className="font-semibold text-gray-900">
+                      {itemDetails.condition}
                     </div>
                   </div>
-                </div>
 
-                {/* Additional Item Info */}
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-6 p-4 bg-blue-50 rounded-lg">
-                  <div className="text-center">
-                    <Calendar className="w-5 h-5 text-[#2563EB] mx-auto mb-1" />
-                    <div className="text-xs text-gray-600">Listed</div>
-                    <div className="font-semibold text-gray-900 text-sm">
-                      {itemDetails.listedDate}
+                  {/* Vertical Divider */}
+                  <div className="hidden md:flex items-center justify-center">
+                    <div className="w-px h-12 bg-gray-300"></div>
+                  </div>
+
+                  {/* Category */}
+                  <div className="flex flex-col items-center">
+                    <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center mb-2 border border-gray-200">
+                      <Package className="w-6 h-6 text-[#2563EB]" />
+                    </div>
+                    <div className="text-sm text-gray-600 mb-1">Category</div>
+                    <div className="font-semibold text-gray-900">
+                      {sale.category || "General"}
                     </div>
                   </div>
-                  <div className="text-center">
-                    <MapPin className="w-5 h-5 text-[#2563EB] mx-auto mb-1" />
-                    <div className="text-xs text-gray-600">Location</div>
-                    <div className="font-semibold text-gray-900 text-sm">
-                      {sale.location.split(",")[0] || sale.location}
-                    </div>
+
+                  {/* Vertical Divider */}
+                  <div className="hidden md:flex items-center justify-center">
+                    <div className="w-px h-12 bg-gray-300"></div>
                   </div>
-                  <div className="text-center">
-                    <Package className="w-5 h-5 text-[#2563EB] mx-auto mb-1" />
-                    <div className="text-xs text-gray-600">Item ID</div>
-                    <div className="font-semibold text-gray-900 text-sm">
-                      {itemDetails.itemId}
+
+                  {/* Status */}
+                  <div className="flex flex-col items-center">
+                    <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center mb-2 border border-gray-200">
+                      <CheckCircle className="w-6 h-6 text-[#2563EB]" />
+                    </div>
+                    <div className="text-sm text-gray-600 mb-1">Status</div>
+                    <div className="font-semibold text-gray-900">Available</div>
+                  </div>
+
+                  {/* Vertical Divider */}
+                  <div className="hidden md:flex items-center justify-center">
+                    <div className="w-px h-12 bg-gray-300"></div>
+                  </div>
+
+                  {/* Type */}
+                  <div className="flex flex-col items-center col-span-2 md:col-span-1 mt-4 md:mt-0">
+                    <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center mb-2 border border-gray-200">
+                      <Package className="w-6 h-6 text-[#2563EB]" />
+                    </div>
+                    <div className="text-sm text-gray-600 mb-1">Type</div>
+                    <div className="font-semibold text-gray-900">
+                      {itemDetails.priceType}
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* Tabs */}
-              <div className="border-b border-gray-200">
-                <div className="px-6 flex space-x-8 overflow-x-auto">
-                  {["overview", "features", "location", "details"].map(
-                    (tab) => (
-                      <button
-                        key={tab}
-                        onClick={() => setActiveTab(tab)}
-                        className={`py-4 px-1 font-medium text-sm border-b-2 transition-colors capitalize ${
-                          activeTab === tab
-                            ? "border-[#2563EB] text-[#2563EB]"
-                            : "border-transparent text-gray-500 hover:text-gray-700"
-                        }`}
-                      >
-                        {tab}
-                      </button>
-                    )
-                  )}
+              {/* Additional Item Info */}
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-6 p-4 bg-blue-50 rounded-lg">
+                <div className="text-center">
+                  <Calendar className="w-5 h-5 text-[#2563EB] mx-auto mb-1" />
+                  <div className="text-xs text-gray-600">Listed</div>
+                  <div className="font-semibold text-gray-900 text-sm">
+                    {itemDetails.listedDate}
+                  </div>
+                </div>
+                <div className="text-center">
+                  <MapPin className="w-5 h-5 text-[#2563EB] mx-auto mb-1" />
+                  <div className="text-xs text-gray-600">Location</div>
+                  <div className="font-semibold text-gray-900 text-sm">
+                    {sale.location.split(",")[0] || sale.location}
+                  </div>
+                </div>
+                <div className="text-center">
+                  <Package className="w-5 h-5 text-[#2563EB] mx-auto mb-1" />
+                  <div className="text-xs text-gray-600">Item ID</div>
+                  <div className="font-semibold text-gray-900 text-sm">
+                    {itemDetails.itemId}
+                  </div>
                 </div>
               </div>
+            </div>
 
-              {/* Tab Content */}
-              <div className="p-6">
-                {activeTab === "overview" && (
-                  <div className="space-y-6">
-                    <div>
-                      <h3 className="text-lg font-semibold text-gray-900 mb-3">
-                        Item Description
-                      </h3>
-                      <p className="text-gray-600 leading-relaxed">
-                        {sale.description}
-                      </p>
+            {/* Tabs */}
+            <div className="border-b border-gray-200">
+              <div className="px-6 flex space-x-8 overflow-x-auto">
+                {["overview", "features", "location", "details"].map((tab) => (
+                  <button
+                    key={tab}
+                    onClick={() => setActiveTab(tab)}
+                    className={`py-4 px-1 font-medium text-sm border-b-2 transition-colors capitalize ${
+                      activeTab === tab
+                        ? "border-[#2563EB] text-[#2563EB]"
+                        : "border-transparent text-gray-500 hover:text-gray-700"
+                    }`}
+                  >
+                    {tab}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Tab Content */}
+            <div className="p-6">
+              {activeTab === "overview" && (
+                <div className="space-y-6">
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-3">
+                      Item Description
+                    </h3>
+                    <p className="text-gray-600 leading-relaxed">
+                      {sale.description}
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {activeTab === "features" && (
+                <div className="space-y-6">
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-3">
+                      Key Features
+                    </h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {features.map((feature, index) => (
+                        <div key={index} className="flex items-center gap-3">
+                          <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
+                          <span className="text-gray-700">{feature}</span>
+                        </div>
+                      ))}
                     </div>
                   </div>
-                )}
+                </div>
+              )}
 
-                {activeTab === "features" && (
-                  <div className="space-y-6">
-                    <div>
-                      <h3 className="text-lg font-semibold text-gray-900 mb-3">
-                        Key Features
-                      </h3>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                        {features.map((feature, index) => (
-                          <div key={index} className="flex items-center gap-3">
-                            <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
-                            <span className="text-gray-700">{feature}</span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                )}
+              {activeTab === "location" && (
+                <div className="space-y-6">
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-3">
+                      Pickup Location
+                    </h3>
+                    <p className="text-gray-600 mb-4">
+                      {sale.location}. The seller prefers to meet in a public
+                      location for safety. Contact the seller to arrange a
+                      convenient meeting time and place.
+                    </p>
 
-                {activeTab === "location" && (
-                  <div className="space-y-6">
-                    <div>
-                      <h3 className="text-lg font-semibold text-gray-900 mb-3">
-                        Pickup Location
-                      </h3>
-                      <p className="text-gray-600 mb-4">
-                        {sale.location}. The seller prefers to meet in a public
-                        location for safety. Contact the seller to arrange a
-                        convenient meeting time and place.
-                      </p>
-
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                        <div className="text-center p-4 bg-gray-50 rounded-lg">
-                          <div className="text-lg font-bold text-[#2563EB]">
-                            Public
-                          </div>
-                          <div className="text-sm text-gray-600">
-                            Meeting Place
-                          </div>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                      <div className="text-center p-4 bg-gray-50 rounded-lg">
+                        <div className="text-lg font-bold text-[#2563EB]">
+                          Public
                         </div>
-                        <div className="text-center p-4 bg-gray-50 rounded-lg">
-                          <div className="text-lg font-bold text-[#2563EB]">
-                            Flexible
-                          </div>
-                          <div className="text-sm text-gray-600">Timings</div>
-                        </div>
-                        <div className="text-center p-4 bg-gray-50 rounded-lg">
-                          <div className="text-lg font-bold text-[#2563EB]">
-                            Safe
-                          </div>
-                          <div className="text-sm text-gray-600">
-                            Transaction
-                          </div>
+                        <div className="text-sm text-gray-600">
+                          Meeting Place
                         </div>
                       </div>
-                    </div>
-
-                    <div>
-                      <h3 className="text-lg font-semibold text-gray-900 mb-3">
-                        Map Location
-                      </h3>
-                      <div className="w-full h-80 rounded-lg overflow-hidden border border-gray-200">
-                        <iframe
-                          title="Item Location Map"
-                          width="100%"
-                          height="100%"
-                          loading="lazy"
-                          allowFullScreen
-                          referrerPolicy="no-referrer-when-downgrade"
-                          src={`https://www.google.com/maps?q=${encodeURIComponent(
-                            sale.location
-                          )}&output=embed&zoom=15`}
-                          className="border-0"
-                        ></iframe>
+                      <div className="text-center p-4 bg-gray-50 rounded-lg">
+                        <div className="text-lg font-bold text-[#2563EB]">
+                          Flexible
+                        </div>
+                        <div className="text-sm text-gray-600">Timings</div>
+                      </div>
+                      <div className="text-center p-4 bg-gray-50 rounded-lg">
+                        <div className="text-lg font-bold text-[#2563EB]">
+                          Safe
+                        </div>
+                        <div className="text-sm text-gray-600">Transaction</div>
                       </div>
                     </div>
                   </div>
-                )}
 
-                {activeTab === "details" && (
-                  <div className="space-y-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div>
-                        <h4 className="font-semibold text-gray-900 mb-3">
-                          Item Details
-                        </h4>
-                        <div className="space-y-3">
-                          <div className="flex justify-between py-2 border-b border-gray-100">
-                            <span className="text-gray-600">Condition</span>
-                            <span className="font-medium">
-                              {itemDetails.condition}
-                            </span>
-                          </div>
-                          <div className="flex justify-between py-2 border-b border-gray-100">
-                            <span className="text-gray-600">Price Type</span>
-                            <span className="font-medium">{itemDetails.priceType}</span>
-                          </div>
-                          <div className="flex justify-between py-2 border-b border-gray-100">
-                            <span className="text-gray-600">Listed Date</span>
-                            <span className="font-medium">{itemDetails.listedDate}</span>
-                          </div>
-                          <div className="flex justify-between py-2 border-b border-gray-100">
-                            <span className="text-gray-600">Item ID</span>
-                            <span className="font-medium">{itemDetails.itemId}</span>
-                          </div>
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-3">
+                      Map Location
+                    </h3>
+                    <div className="w-full h-80 rounded-lg overflow-hidden border border-gray-200">
+                      <iframe
+                        title="Item Location Map"
+                        width="100%"
+                        height="100%"
+                        loading="lazy"
+                        allowFullScreen
+                        referrerPolicy="no-referrer-when-downgrade"
+                        src={`https://www.google.com/maps?q=${encodeURIComponent(
+                          sale.location
+                        )}&output=embed&zoom=15`}
+                        className="border-0"
+                      ></iframe>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {activeTab === "details" && (
+                <div className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <h4 className="font-semibold text-gray-900 mb-3">
+                        Item Details
+                      </h4>
+                      <div className="space-y-3">
+                        <div className="flex justify-between py-2 border-b border-gray-100">
+                          <span className="text-gray-600">Condition</span>
+                          <span className="font-medium">
+                            {itemDetails.condition}
+                          </span>
+                        </div>
+                        <div className="flex justify-between py-2 border-b border-gray-100">
+                          <span className="text-gray-600">Price Type</span>
+                          <span className="font-medium">
+                            {itemDetails.priceType}
+                          </span>
+                        </div>
+                        <div className="flex justify-between py-2 border-b border-gray-100">
+                          <span className="text-gray-600">Listed Date</span>
+                          <span className="font-medium">
+                            {itemDetails.listedDate}
+                          </span>
+                        </div>
+                        <div className="flex justify-between py-2 border-b border-gray-100">
+                          <span className="text-gray-600">Item ID</span>
+                          <span className="font-medium">
+                            {itemDetails.itemId}
+                          </span>
                         </div>
                       </div>
+                    </div>
 
-                      <div>
-                        <h4 className="font-semibold text-gray-900 mb-3">
-                          Seller Information
-                        </h4>
-                        <div className="space-y-3">
-                          <div className="flex justify-between py-2 border-b border-gray-100">
-                            <span className="text-gray-600">Seller Type</span>
-                            <span className="font-medium">
-                              {itemDetails.sellerType}
-                            </span>
-                          </div>
-                          <div className="flex justify-between py-2 border-b border-gray-100">
-                            <span className="text-gray-600">Response Time</span>
-                            <span className="font-medium">
-                              {itemDetails.responseTime}
-                            </span>
-                          </div>
-                          <div className="flex justify-between py-2 border-b border-gray-100">
-                            <span className="text-gray-600">Meetup</span>
-                            <span className="font-medium">
-                              {itemDetails.meetup}
-                            </span>
-                          </div>
-                          <div className="flex justify-between py-2 border-b border-gray-100">
-                            <span className="text-gray-600">Delivery</span>
-                            <span className="font-medium">
-                              {itemDetails.delivery}
-                            </span>
-                          </div>
+                    <div>
+                      <h4 className="font-semibold text-gray-900 mb-3">
+                        Seller Information
+                      </h4>
+                      <div className="space-y-3">
+                        <div className="flex justify-between py-2 border-b border-gray-100">
+                          <span className="text-gray-600">Seller Type</span>
+                          <span className="font-medium">
+                            {itemDetails.sellerType}
+                          </span>
+                        </div>
+                        <div className="flex justify-between py-2 border-b border-gray-100">
+                          <span className="text-gray-600">Response Time</span>
+                          <span className="font-medium">
+                            {itemDetails.responseTime}
+                          </span>
+                        </div>
+                        <div className="flex justify-between py-2 border-b border-gray-100">
+                          <span className="text-gray-600">Meetup</span>
+                          <span className="font-medium">
+                            {itemDetails.meetup}
+                          </span>
+                        </div>
+                        <div className="flex justify-between py-2 border-b border-gray-100">
+                          <span className="text-gray-600">Delivery</span>
+                          <span className="font-medium">
+                            {itemDetails.delivery}
+                          </span>
                         </div>
                       </div>
                     </div>
                   </div>
-                )}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Sidebar - 1/3 width */}
+        <div className="lg:w-1/3 space-y-6">
+          {/* Contact Card */}
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              Contact Seller
+            </h3>
+
+            <div className="flex items-center gap-4 mb-6">
+              <div className="w-16 h-16 bg-[#2563EB] rounded-full flex items-center justify-center text-white font-bold text-lg">
+                {sale.sellerName?.charAt(0) || "S"}
+              </div>
+              <div>
+                <h4 className="font-semibold text-gray-900">
+                  {sale.sellerName || "Seller"}
+                </h4>
+                <p className="text-gray-600 text-sm">Marketplace Seller</p>
+                <div className="flex items-center gap-1 mt-1">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <Star
+                      key={star}
+                      className="w-4 h-4 fill-yellow-400 text-yellow-400"
+                    />
+                  ))}
+                  <span className="text-sm text-gray-600 ml-1">
+                    (12 reviews)
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-3">
+              <button className="w-full bg-[#2563EB] text-white py-3 px-4 rounded-lg cursor-pointer hover:bg-[#1D4ED8] transition-colors font-medium flex items-center justify-center gap-2">
+                <MessageCircle className="w-4 h-4" />
+                Message Seller
+              </button>
+
+              <button className="w-full border border-[#2563EB] text-[#2563EB] py-3 px-4 rounded-lg hover:bg-[#2563EB] hover:text-white transition-colors font-medium flex items-center justify-center gap-2 cursor-pointer">
+                <Phone className="w-4 h-4" />
+                Call Seller
+              </button>
+            </div>
+
+            <div className="mt-6 pt-6 border-t border-gray-200">
+              <div className="text-center text-sm text-gray-600">
+                <Calendar className="w-4 h-4 inline mr-1" />
+                Listed {sale.posted}
               </div>
             </div>
           </div>
 
-          {/* Sidebar - 1/3 width */}
-          <div className="lg:w-1/3 space-y-6">
-            {/* Contact Card */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                Contact Seller
+          {/* Similar Items */}
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            <div className="p-6 border-b border-gray-200">
+              <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
+                <Package className="w-5 h-5 text-[#2563EB]" />
+                Similar Items ({similarItems.length})
               </h3>
-
-              <div className="flex items-center gap-4 mb-6">
-                <div className="w-16 h-16 bg-[#2563EB] rounded-full flex items-center justify-center text-white font-bold text-lg">
-                  {sale.sellerName?.charAt(0) || "S"}
-                </div>
-                <div>
-                  <h4 className="font-semibold text-gray-900">
-                    {sale.sellerName || "Seller"}
-                  </h4>
-                  <p className="text-gray-600 text-sm">
-                    Marketplace Seller
-                  </p>
-                  <div className="flex items-center gap-1 mt-1">
-                    {[1, 2, 3, 4, 5].map((star) => (
-                      <Star
-                        key={star}
-                        className="w-4 h-4 fill-yellow-400 text-yellow-400"
-                      />
-                    ))}
-                    <span className="text-sm text-gray-600 ml-1">
-                      (12 reviews)
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="space-y-3">
-                <button className="w-full bg-[#2563EB] text-white py-3 px-4 rounded-lg cursor-pointer hover:bg-[#1D4ED8] transition-colors font-medium flex items-center justify-center gap-2">
-                  <MessageCircle className="w-4 h-4" />
-                  Message Seller
-                </button>
-
-                <button className="w-full border border-[#2563EB] text-[#2563EB] py-3 px-4 rounded-lg hover:bg-[#2563EB] hover:text-white transition-colors font-medium flex items-center justify-center gap-2 cursor-pointer">
-                  <Phone className="w-4 h-4" />
-                  Call Seller
-                </button>
-              </div>
-
-              <div className="mt-6 pt-6 border-t border-gray-200">
-                <div className="text-center text-sm text-gray-600">
-                  <Calendar className="w-4 h-4 inline mr-1" />
-                  Listed {sale.posted}
-                </div>
-              </div>
             </div>
 
-            {/* Similar Items */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-              <div className="p-6 border-b border-gray-200">
-                <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
-                  <Package className="w-5 h-5 text-[#2563EB]" />
-                  Similar Items ({similarItems.length})
-                </h3>
-              </div>
+            <div className="divide-y divide-gray-100 max-h-[600px] overflow-y-auto">
+              {similarItems.map((similarItem) => {
+                const similarTypeInfo = getTypeInfo(similarItem.type);
 
-              <div className="divide-y divide-gray-100 max-h-[600px] overflow-y-auto">
-                {similarItems.map((similarItem) => {
-                  const similarTypeInfo = getTypeInfo(similarItem.type);
+                return (
+                  <Link
+                    key={similarItem.id}
+                    to={`/categories/sales/${similarItem.id}`}
+                    className="block p-4 hover:bg-gray-50 transition-colors border-b border-gray-100 last:border-b-0"
+                  >
+                    <div className="flex gap-3">
+                      <img
+                        src={
+                          similarItem.images?.[0] || getItemImage(similarItem)
+                        }
+                        alt={similarItem.title}
+                        className="w-20 h-16 rounded-lg object-cover flex-shrink-0"
+                      />
+                      <div className="flex-1 min-w-0">
+                        <div className="flex justify-between items-start mb-1">
+                          <h4 className="font-semibold text-gray-900 text-sm line-clamp-1 flex-1">
+                            {similarItem.title}
+                          </h4>
+                          <span
+                            className={`text-xs px-2 py-1 rounded-full flex-shrink-0 ml-2 ${similarTypeInfo.color}`}
+                          >
+                            {similarTypeInfo.text}
+                          </span>
+                        </div>
 
-                  return (
-                    <Link
-                      key={similarItem.id}
-                      to={`/categories/sales/${similarItem.id}`}
-                      className="block p-4 hover:bg-gray-50 transition-colors border-b border-gray-100 last:border-b-0"
-                    >
-                      <div className="flex gap-3">
-                        <img
-                          src={similarItem.images?.[0] || getItemImage(similarItem)}
-                          alt={similarItem.title}
-                          className="w-20 h-16 rounded-lg object-cover flex-shrink-0"
-                        />
-                        <div className="flex-1 min-w-0">
-                          <div className="flex justify-between items-start mb-1">
-                            <h4 className="font-semibold text-gray-900 text-sm line-clamp-1 flex-1">
-                              {similarItem.title}
-                            </h4>
-                            <span
-                              className={`text-xs px-2 py-1 rounded-full flex-shrink-0 ml-2 ${similarTypeInfo.color}`}
-                            >
-                              {similarTypeInfo.text}
-                            </span>
-                          </div>
+                        <div className="flex items-center gap-1 mb-2">
+                          <MapPin className="w-3 h-3 text-gray-400" />
+                          <p className="text-xs text-gray-600 truncate">
+                            {similarItem.location.split(",")[0] ||
+                              similarItem.location}
+                          </p>
+                        </div>
 
-                          <div className="flex items-center gap-1 mb-2">
-                            <MapPin className="w-3 h-3 text-gray-400" />
-                            <p className="text-xs text-gray-600 truncate">
-                              {similarItem.location.split(",")[0] || similarItem.location}
-                            </p>
-                          </div>
-
-                          <div className="flex items-center justify-between">
-                            <span className={`font-bold text-[#2563EB] text-sm ${
+                        <div className="flex items-center justify-between">
+                          <span
+                            className={`font-bold text-[#2563EB] text-sm ${
                               similarItem.price === "Free"
                                 ? "text-green-600"
                                 : similarItem.price === "Negotiable"
                                 ? "text-blue-600"
                                 : ""
-                            }`}>
-                              {similarItem.price}
-                            </span>
-                            <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">
-                              {similarItem.posted}
-                            </span>
-                          </div>
+                            }`}
+                          >
+                            {similarItem.price}
+                          </span>
+                          <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">
+                            {similarItem.posted}
+                          </span>
                         </div>
                       </div>
-                    </Link>
-                  );
-                })}
-              </div>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
 
-              <div className="p-4 bg-gray-50 border-t border-gray-200">
-                <Link
-                  to="/categories/sales"
-                  className="w-full text-center text-[#2563EB] font-medium hover:text-[#1D4ED8] transition-colors text-sm inline-flex items-center justify-center gap-1"
-                >
-                  View All Items
-                  <ArrowLeft className="w-4 h-4 transform rotate-180" />
-                </Link>
-              </div>
+            <div className="p-4 bg-gray-50 border-t border-gray-200">
+              <Link
+                to="/categories/sales"
+                className="w-full text-center text-[#2563EB] font-medium hover:text-[#1D4ED8] transition-colors text-sm inline-flex items-center justify-center gap-1"
+              >
+                View All Items
+                <ArrowLeft className="w-4 h-4 transform rotate-180" />
+              </Link>
             </div>
           </div>
         </div>
+      </div>
     </div>
   );
 }

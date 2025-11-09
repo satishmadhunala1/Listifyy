@@ -849,7 +849,7 @@ function DiscussionDetails() {
             </div>
           </div>
 
-          {/* Similar Discussions - UPDATED LINKS */}
+          {/* Similar Discussions */}
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
             <div className="p-6 border-b border-gray-200">
               <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">

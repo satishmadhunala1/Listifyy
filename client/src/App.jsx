@@ -19,6 +19,9 @@ import HousingDetails from "./components/HousingDetails";
 import CommunityList from "./components/CommunityList";
 import CommunityDetails from "./components/CommunityDetails";
 
+// Import Discussion Components
+import DiscussionList from "./components/DiscussionList";
+import DiscussionDetails from "./components/DiscussionDetails";
 
 import ForSale from "./components/ForSale";
 import SalesDetails from "./components/SalesDetails";
@@ -154,6 +157,37 @@ function App() {
               element={<CommunityList category="general-community" />}
             />
 
+            {/* Discussion Forums Category Pages */}
+            <Route path="/discussions" element={<DiscussionList />} />
+            <Route
+              path="/discussions/outdoors"
+              element={<DiscussionList category="outdoors" />}
+            />
+            <Route
+              path="/discussions/food-drink"
+              element={<DiscussionList category="food-drink" />}
+            />
+            <Route
+              path="/discussions/fitness"
+              element={<DiscussionList category="fitness" />}
+            />
+            <Route
+              path="/discussions/arts-crafts"
+              element={<DiscussionList category="arts-crafts" />}
+            />
+            <Route
+              path="/discussions/entertainment"
+              element={<DiscussionList category="entertainment" />}
+            />
+            <Route
+              path="/discussions/education"
+              element={<DiscussionList category="education" />}
+            />
+            <Route
+              path="/discussions/community"
+              element={<DiscussionList category="community" />}
+            />
+
             {/* Services Category Pages */}
             <Route path="/services" element={<ServicesList />} />
             <Route
@@ -188,6 +222,7 @@ function App() {
             {/* Individual Listing Pages */}
             <Route path="/housing/:id" element={<HousingDetails />} />
             <Route path="/community/:id" element={<CommunityDetails />} />
+            <Route path="/discussions/:id" element={<DiscussionDetails />} />
             <Route path="/services/:id" element={<ServicesDetails />} />
 
             {/* Other Category Pages */}
@@ -197,7 +232,7 @@ function App() {
             
             <Route path="/jobs" element={<Jobs />} />
             <Route path="/gigs" element={<Gigs />} />
-            <Route path="/discussion-forums" element={<DiscussionForums />} />
+            <Route path="/discussion-forums" element={<DiscussionList />} />
             <Route path="/resumes" element={<Resumes />} />
             <Route path="/sell" element={<Sell />} />
 
@@ -226,8 +261,6 @@ function App() {
 }
 
 // Placeholder components for routes that don't exist yet
-
-
 const Jobs = () => (
   <div className="min-h-screen pt-24">
     <div className="max-w-7xl mx-auto px-4 py-8">
