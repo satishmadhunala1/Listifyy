@@ -19,6 +19,10 @@ import HousingDetails from "./components/HousingDetails";
 import CommunityList from "./components/CommunityList";
 import CommunityDetails from "./components/CommunityDetails";
 
+
+import ForSale from "./components/ForSale";
+import SalesDetails from "./components/SalesDetails";
+
 import "./App.css";
 
 function App() {
@@ -153,6 +157,9 @@ function App() {
 
             {/* Other Category Pages */}
             <Route path="/for-sale" element={<ForSale />} />
+            <Route path="/for-sale/:id" element={<SalesDetails />} />
+
+            
             <Route path="/jobs" element={<Jobs />} />
             <Route path="/services" element={<Services />} />
             <Route path="/gigs" element={<Gigs />} />
@@ -185,14 +192,7 @@ function App() {
 }
 
 // Placeholder components for routes that don't exist yet
-const ForSale = () => (
-  <div className="min-h-screen pt-24">
-    <div className="max-w-7xl mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold">For Sale</h1>
-      <p>For Sale page coming soon...</p>
-    </div>
-  </div>
-);
+
 
 const Jobs = () => (
   <div className="min-h-screen pt-24">
