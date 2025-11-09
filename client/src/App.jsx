@@ -22,6 +22,9 @@ import CommunityDetails from "./components/CommunityDetails";
 
 import ForSale from "./components/ForSale";
 import SalesDetails from "./components/SalesDetails";
+// Import Services Components
+import ServicesList from "./components/ServicesList";
+import ServicesDetails from "./components/ServicesDetails";
 
 import "./App.css";
 
@@ -151,9 +154,41 @@ function App() {
               element={<CommunityList category="general-community" />}
             />
 
+            {/* Services Category Pages */}
+            <Route path="/services" element={<ServicesList />} />
+            <Route
+              path="/services/home-services"
+              element={<ServicesList category="home-services" />}
+            />
+            <Route
+              path="/services/professional-services"
+              element={<ServicesList category="professional-services" />}
+            />
+            <Route
+              path="/services/health-fitness"
+              element={<ServicesList category="health-fitness" />}
+            />
+            <Route
+              path="/services/pet-services"
+              element={<ServicesList category="pet-services" />}
+            />
+            <Route
+              path="/services/creative-services"
+              element={<ServicesList category="creative-services" />}
+            />
+            <Route
+              path="/services/technical-services"
+              element={<ServicesList category="technical-services" />}
+            />
+            <Route
+              path="/services/general-services"
+              element={<ServicesList category="general-services" />}
+            />
+
             {/* Individual Listing Pages */}
             <Route path="/housing/:id" element={<HousingDetails />} />
             <Route path="/community/:id" element={<CommunityDetails />} />
+            <Route path="/services/:id" element={<ServicesDetails />} />
 
             {/* Other Category Pages */}
             <Route path="/for-sale" element={<ForSale />} />
@@ -161,7 +196,6 @@ function App() {
 
             
             <Route path="/jobs" element={<Jobs />} />
-            <Route path="/services" element={<Services />} />
             <Route path="/gigs" element={<Gigs />} />
             <Route path="/discussion-forums" element={<DiscussionForums />} />
             <Route path="/resumes" element={<Resumes />} />
@@ -199,15 +233,6 @@ const Jobs = () => (
     <div className="max-w-7xl mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold">Jobs</h1>
       <p>Jobs page coming soon...</p>
-    </div>
-  </div>
-);
-
-const Services = () => (
-  <div className="min-h-screen pt-24">
-    <div className="max-w-7xl mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold">Services</h1>
-      <p>Services page coming soon...</p>
     </div>
   </div>
 );

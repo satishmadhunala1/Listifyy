@@ -1,4 +1,4 @@
-// src/components/HousingDetails.jsx
+// src/components/ServicesDetails.jsx
 import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { FaComments } from "react-icons/fa";
@@ -15,104 +15,105 @@ import {
   Clock,
   CheckCircle,
   ChevronRight as ChevronRightSmall,
-  Bed,
-  Bath,
-  Square,
-  Home,
-  Car,
+  Briefcase,
+  Award,
   Shield,
-  Building,
-  Ruler,
   DollarSign,
 } from "lucide-react";
-import { housingData } from "../jsonData/index.js";
+import { servicesData } from "../jsonData/index.js";
 
-function HousingDetails() {
+function ServicesDetails() {
   const { id } = useParams();
-  const [house, setHouse] = useState(null);
+  const [service, setService] = useState(null);
   const [selectedImage, setSelectedImage] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [savedHouses, setSavedHouses] = useState([]);
+  const [savedServices, setSavedServices] = useState([]);
   const [activeTab, setActiveTab] = useState("overview");
   const [showShareMenu, setShowShareMenu] = useState(false);
-  const [currentPropertyType, setCurrentPropertyType] = useState(null);
+  const [currentServiceType, setCurrentServiceType] = useState(null);
 
   useEffect(() => {
-    const fetchHouseData = async () => {
+    const fetchServiceData = async () => {
       try {
         setLoading(true);
         // Simulate API call delay
-        await new Promise(resolve => setTimeout(resolve, 500));
-        
-        const foundHouse = housingData.houses.find(
-          (house) => house.id === parseInt(id)
+        await new Promise((resolve) => setTimeout(resolve, 500));
+
+        const foundService = servicesData.services.find(
+          (service) => service.id === parseInt(id)
         );
-        
-        if (!foundHouse) {
-          setError("House not found");
+
+        if (!foundService) {
+          setError("Service not found");
         } else {
-          setHouse(foundHouse);
-          setSelectedImage(foundHouse.images[0]);
-          // Extract property type for breadcrumb
-          const propertyType = extractPropertyType(foundHouse);
-          setCurrentPropertyType(propertyType);
+          setService(foundService);
+          setSelectedImage(foundService.images?.[0] || getServiceImage(foundService));
+          // Extract service type for breadcrumb
+          const serviceType = extractServiceType(foundService);
+          setCurrentServiceType(serviceType);
         }
       } catch (err) {
-        setError("Failed to load house data");
-        console.error("Error fetching house data:", err);
+        setError("Failed to load service data");
+        console.error("Error fetching service data:", err);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchHouseData();
+    fetchServiceData();
   }, [id]);
 
   useEffect(() => {
-    const saved = JSON.parse(localStorage.getItem("savedHouses") || "[]");
-    setSavedHouses(saved);
+    const saved = JSON.parse(localStorage.getItem("savedServices") || "[]");
+    setSavedServices(saved);
   }, [id]);
 
-  // Enhanced property type extraction with fallback
-  const extractPropertyType = (house) => {
-    if (house.propertyType) return house.propertyType;
+  // Enhanced service type extraction with fallback
+  const extractServiceType = (service) => {
+    const title = service.title.toLowerCase();
+    const description = service.description.toLowerCase();
 
-    const title = house.title.toLowerCase();
-    const description = house.description.toLowerCase();
-
-    if (title.includes("apartment") || description.includes("apartment")) return "apartment";
-    if (title.includes("villa") || description.includes("villa")) return "villa";
-    if (title.includes("house") || description.includes("house")) return "house";
-    if (title.includes("condo") || description.includes("condo")) return "condo";
-    if (title.includes("studio") || description.includes("studio")) return "studio";
-    if (title.includes("commercial") || description.includes("office")) return "commercial";
-    if (title.includes("land") || description.includes("plot")) return "land";
+    if (title.includes("clean") || description.includes("clean")) return "cleaning";
+    if (title.includes("repair") || description.includes("repair") || 
+        title.includes("fix") || description.includes("fix")) return "repair";
+    if (title.includes("dog") || title.includes("pet") || 
+        description.includes("dog") || description.includes("pet")) return "pet";
+    if (title.includes("design") || title.includes("photo") || 
+        title.includes("creative") || description.includes("design")) return "creative";
+    if (title.includes("tutor") || title.includes("lesson") || 
+        description.includes("learn") || description.includes("teach")) return "education";
+    if (title.includes("train") || title.includes("fitness") || 
+        title.includes("yoga") || description.includes("fitness")) return "health";
+    if (title.includes("web") || title.includes("seo") || 
+        title.includes("development") || description.includes("technical")) return "technical";
+    if (title.includes("move") || description.includes("moving")) return "moving";
+    if (title.includes("garden") || description.includes("landscap")) return "gardening";
     
-    return "residential";
+    return "professional";
   };
 
-  const isSaved = savedHouses.some((h) => h.id === house?.id);
+  const isSaved = savedServices.some((h) => h.id === service?.id);
 
   const toggleSave = () => {
-    if (!house) return;
+    if (!service) return;
     let newSaved;
     if (isSaved) {
-      newSaved = savedHouses.filter((h) => h.id !== house.id);
+      newSaved = savedServices.filter((h) => h.id !== service.id);
     } else {
-      newSaved = [...savedHouses, house];
+      newSaved = [...savedServices, service];
     }
-    setSavedHouses(newSaved);
-    localStorage.setItem("savedHouses", JSON.stringify(newSaved));
+    setSavedServices(newSaved);
+    localStorage.setItem("savedServices", JSON.stringify(newSaved));
   };
 
-  const shareProperty = () => {
-    if (!house) return;
+  const shareService = () => {
+    if (!service) return;
 
     if (navigator.share) {
       navigator.share({
-        title: house.title,
-        text: house.description,
+        title: service.title,
+        text: service.description,
         url: window.location.href,
       });
     } else {
@@ -125,119 +126,122 @@ function HousingDetails() {
     setShowShareMenu(false);
   };
 
-  // Get property type badge color
-  const getPropertyTypeColor = (propertyType) => {
-    if (!propertyType) return "bg-gray-100 text-gray-800 border border-gray-200";
+  // Get service type badge color
+  const getServiceTypeColor = (serviceType) => {
+    if (!serviceType) return "bg-gray-100 text-gray-800 border border-gray-200";
 
-    switch (propertyType) {
-      case "apartment":
+    switch (serviceType) {
+      case "cleaning":
         return "bg-blue-100 text-blue-800 border border-blue-200";
-      case "villa":
-        return "bg-purple-100 text-purple-800 border border-purple-200";
-      case "house":
-        return "bg-green-100 text-green-800 border border-green-200";
-      case "condo":
+      case "repair":
         return "bg-orange-100 text-orange-800 border border-orange-200";
-      case "studio":
-        return "bg-pink-100 text-pink-800 border border-pink-200";
-      case "commercial":
+      case "pet":
+        return "bg-green-100 text-green-800 border border-green-200";
+      case "creative":
+        return "bg-purple-100 text-purple-800 border border-purple-200";
+      case "education":
         return "bg-indigo-100 text-indigo-800 border border-indigo-200";
-      case "land":
-        return "bg-yellow-100 text-yellow-800 border border-yellow-200";
+      case "health":
+        return "bg-red-100 text-red-800 border border-red-200";
+      case "technical":
+        return "bg-teal-100 text-teal-800 border border-teal-200";
+      case "moving":
+        return "bg-amber-100 text-amber-800 border border-amber-200";
+      case "gardening":
+        return "bg-emerald-100 text-emerald-800 border border-emerald-200";
       default:
         return "bg-gray-100 text-gray-800 border border-gray-200";
     }
   };
 
-  // Different images for different property types
-  const getPropertyImage = (house) => {
-    const propertyType = extractPropertyType(house);
+  // Different images for different service types
+  const getServiceImage = (service) => {
+    const serviceType = extractServiceType(service);
 
-    switch (propertyType) {
-      case "apartment":
-        return "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80";
-      case "villa":
-        return "https://images.unsplash.com/photo-1613490493576-7fde63acd811?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80";
-      case "house":
-        return "https://images.unsplash.com/photo-1518780664697-55e3ad937233?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80";
-      case "condo":
-        return "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80";
-      case "studio":
-        return "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80";
-      case "commercial":
-        return "https://images.unsplash.com/photo-1497366811353-6870744d04b2?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80";
-      case "land":
-        return "https://images.unsplash.com/photo-1500382017468-9049fed747ef?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80";
+    switch (serviceType) {
+      case "cleaning":
+        return "https://images.unsplash.com/photo-1581578731548-c64695cc6952?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80";
+      case "repair":
+        return "https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80";
+      case "pet":
+        return "https://images.unsplash.com/photo-1450778869180-41d0601e046e?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80";
+      case "creative":
+        return "https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80";
+      case "education":
+        return "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80";
+      case "health":
+        return "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80";
+      case "technical":
+        return "https://images.unsplash.com/photo-1517077304055-6e89abbf09b0?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80";
+      case "moving":
+        return "https://images.unsplash.com/photo-1541976590-713941681591?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80";
+      case "gardening":
+        return "https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80";
       default:
-        return "https://images.unsplash.com/photo-1568605114967-8130f3a36994?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80";
+        return "https://images.unsplash.com/photo-1551135049-8a33b5883817?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80";
     }
   };
 
   // Extract features from description
   const extractFeatures = (description) => {
     if (!description)
-      return ["Modern Kitchen", "Hardwood Floors", "Natural Light", "Energy Efficient"];
+      return ["Professional Service", "Quality Guaranteed", "Customer Satisfaction"];
 
     const features = [];
-    if (description.toLowerCase().includes("parking")) features.push("Parking");
-    if (description.toLowerCase().includes("garden") || description.toLowerCase().includes("yard"))
-      features.push("Garden");
-    if (description.toLowerCase().includes("balcony")) features.push("Balcony");
-    if (description.toLowerCase().includes("pool"))
-      features.push("Swimming Pool");
-    if (description.toLowerCase().includes("security"))
-      features.push("Security");
-    if (description.toLowerCase().includes("furnished"))
-      features.push("Furnished");
-    if (description.toLowerCase().includes("air conditioning") || description.toLowerCase().includes("ac"))
-      features.push("Air Conditioning");
-    if (description.toLowerCase().includes("laundry")) features.push("Laundry");
-    if (description.toLowerCase().includes("modern"))
-      features.push("Modern Design");
-    if (description.toLowerCase().includes("renovated"))
-      features.push("Recently Renovated");
-    if (description.toLowerCase().includes("view")) features.push("Great View");
-    if (description.toLowerCase().includes("storage"))
-      features.push("Storage Space");
+    if (description.toLowerCase().includes("professional")) features.push("Professional Service");
+    if (description.toLowerCase().includes("experienced")) features.push("Experienced Provider");
+    if (description.toLowerCase().includes("quality")) features.push("Quality Guaranteed");
+    if (description.toLowerCase().includes("affordable")) features.push("Affordable Pricing");
+    if (description.toLowerCase().includes("reliable")) features.push("Reliable Service");
+    if (description.toLowerCase().includes("quick") || description.toLowerCase().includes("fast")) features.push("Quick Service");
+    if (description.toLowerCase().includes("licensed")) features.push("Licensed Professional");
+    if (description.toLowerCase().includes("insured")) features.push("Fully Insured");
+    if (description.toLowerCase().includes("free")) features.push("Free Consultation");
+    if (description.toLowerCase().includes("emergency")) features.push("Emergency Service Available");
 
     // Add default features if none found
     if (features.length === 0) {
       features.push(
-        "Modern Kitchen",
-        "Hardwood Floors",
-        "Natural Light",
-        "Energy Efficient",
-        "Smart Home"
+        "Professional Quality",
+        "Customer Satisfaction",
+        "Timely Service",
+        "Competitive Pricing"
       );
     }
 
-    return features.slice(0, 8);
+    return features.slice(0, 6);
   };
 
-  // Get similar properties (exclude current house)
-  const getSimilarProperties = () => {
-    if (!house) return [];
-    return housingData.houses.filter((h) => h.id !== house.id).slice(0, 6);
+  // Get similar services (exclude current service)
+  const getSimilarServices = () => {
+    if (!service) return [];
+    return servicesData.services.filter((s) => s.id !== service.id).slice(0, 6);
   };
 
-  // Extract property details
-  const extractPropertyDetails = (house) => {
+  // Extract service details
+  const extractServiceDetails = (service) => {
     return {
       experience: "5+ years",
-      availability: "Immediate",
-      responseTime: "Within 2 hours",
-      rating: "4.9/5",
-      propertiesListed: "50+",
-      guarantee: "Property verification",
-      paymentMethods: "Bank Transfer, Cash",
-      area: `${house.sqft} sqft`,
+      availability: "Flexible",
+      responseTime: "Within 24 hours",
+      rating: "4.8/5",
+      jobsCompleted: "150+",
+      guarantee: "30-day warranty",
+      paymentMethods: "Cash, Credit, Digital",
+      travel: "Up to 20 miles",
     };
   };
 
   // Safe category display function
   const getCategoryDisplay = (category) => {
-    if (!category) return "Property";
-    return category.charAt(0).toUpperCase() + category.slice(1);
+    if (!category) return "Professional Service";
+    return category.charAt(0).toUpperCase() + category.slice(1) + " Service";
+  };
+
+  // Extract rating for display
+  const extractRating = (service) => {
+    const ratings = [4.2, 4.5, 4.8, 4.0, 4.7, 4.9, 4.3, 4.6];
+    return ratings[service.id % ratings.length];
   };
 
   if (loading) {
@@ -245,49 +249,49 @@ function HousingDetails() {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#2563EB] mx-auto mb-4"></div>
-          <p className="text-gray-600 text-lg">Loading property details...</p>
+          <p className="text-gray-600 text-lg">Loading service details...</p>
         </div>
       </div>
     );
   }
 
-  if (error || !house) {
+  if (error || !service) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <Home className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+          <Briefcase className="w-16 h-16 text-gray-400 mx-auto mb-4" />
           <h2 className="text-2xl font-bold text-gray-900 mb-2">
-            Property Not Found
+            Service Not Found
           </h2>
           <p className="text-gray-600 mb-6">
-            The property you're looking for doesn't exist.
+            The service you're looking for doesn't exist.
           </p>
           <Link
-            to="/housing"
+            to="/services"
             className="bg-[#2563EB] text-white px-6 py-3 rounded-lg hover:bg-[#1D4ED8] transition-colors font-medium inline-flex items-center"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Properties
+            Back to Services
           </Link>
         </div>
       </div>
     );
   }
 
-  const propertyTypeColor = getPropertyTypeColor(house.propertyType);
-  const features = extractFeatures(house.description);
-  const propertyDetails = extractPropertyDetails(house);
-  const similarProperties = getSimilarProperties();
-  const propertyType = extractPropertyType(house);
+  const serviceTypeColor = getServiceTypeColor(service.category);
+  const features = extractFeatures(service.description);
+  const serviceDetails = extractServiceDetails(service);
+  const similarServices = getSimilarServices();
+  const rating = extractRating(service);
 
   // Create multiple image thumbnails
-  const displayImages = house.images && house.images.length >= 4 
-    ? house.images.slice(0, 4)
+  const displayImages = service.images && service.images.length >= 4 
+    ? service.images.slice(0, 4)
     : [
-        getPropertyImage(house),
-        "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
-        "https://images.unsplash.com/photo-1613490493576-7fde63acd811?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
-        "https://images.unsplash.com/photo-1518780664697-55e3ad937233?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
+        getServiceImage(service),
+        "https://images.unsplash.com/photo-1581578731548-c64695cc6952?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
+        "https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
+        "https://images.unsplash.com/photo-1450778869180-41d0601e046e?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
       ];
 
   return (
@@ -300,34 +304,34 @@ function HousingDetails() {
             Home
           </Link>
           <ChevronRightSmall className="w-4 h-4" />
-          <Link to="/housing" className="hover:text-[#2563EB]">
-            Housing
+          <Link to="/services" className="hover:text-[#2563EB]">
+            Services
           </Link>
-          {currentPropertyType && (
+          {currentServiceType && (
             <>
               <ChevronRightSmall className="w-4 h-4" />
               <Link
-                to="/housing"
+                to="/services"
                 onClick={(e) => {
                   e.preventDefault();
                   window.history.back();
                 }}
                 className="hover:text-[#2563EB] capitalize"
               >
-                {currentPropertyType}
+                {currentServiceType}
               </Link>
             </>
           )}
           <ChevronRightSmall className="w-4 h-4" />
           <span className="text-gray-900 font-medium line-clamp-1 max-w-xs">
-            {house.title}
+            {service.title}
           </span>
         </div>
 
         {/* Header Navigation with share/save */}
         <div className="flex items-center gap-3">
           <button
-            onClick={shareProperty}
+            onClick={shareService}
             className="p-2 text-gray-600 hover:text-[#2563EB] transition-colors relative"
           >
             <Share2 className="w-5 h-5" />
@@ -372,14 +376,14 @@ function HousingDetails() {
             <div className="relative">
               <img
                 src={selectedImage}
-                alt={house.title}
+                alt={service.title}
                 className="w-full h-96 object-cover"
               />
               <div className="absolute bottom-4 left-4">
                 <span
-                  className={`px-3 py-1.5 rounded-full text-sm font-medium ${propertyTypeColor}`}
+                  className={`px-3 py-1.5 rounded-full text-sm font-medium ${serviceTypeColor}`}
                 >
-                  {getCategoryDisplay(propertyType)}
+                  {getCategoryDisplay(service.category)}
                 </span>
               </div>
             </div>
@@ -398,7 +402,7 @@ function HousingDetails() {
                 >
                   <img
                     src={img}
-                    alt={`${house.title} - ${index + 1}`}
+                    alt={`${service.title} - ${index + 1}`}
                     className="w-full h-24 object-cover"
                   />
                 </button>
@@ -406,110 +410,106 @@ function HousingDetails() {
             </div>
           </div>
 
-          {/* Property Details */}
+          {/* Service Details */}
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-            {/* Header with Price and Title */}
+            {/* Header with Title */}
             <div className="p-6 border-b border-gray-200">
               <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-6">
                 <div className="flex-1">
                   <h1 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-2">
-                    {house.title}
+                    {service.title}
                   </h1>
                   <div className="flex items-center gap-2 text-gray-600">
                     <MapPin className="w-4 h-4" />
-                    <span className="font-medium">{house.location}</span>
+                    <span className="font-medium">{service.location}</span>
                   </div>
                 </div>
 
                 <div className="text-right">
-                  <div className="text-3xl font-bold text-[#2563EB] mb-1">
-                    {house.type === "rent"
-                      ? `$${house.price}/month`
-                      : `$${house.price.toLocaleString()}`}
+                  <div className="text-3xl font-bold text-green-600 mb-1">
+                    {service.pay}
                   </div>
-                  <div className="text-sm text-gray-500">
-                    {house.type === "rent" ? "Monthly Rent" : "Sale Price"}
-                  </div>
+                  <div className="text-sm text-gray-500">Service Rate</div>
                 </div>
               </div>
 
-              {/* Enhanced Property Stats */}
+              {/* Enhanced Service Stats */}
               <div className="bg-gray-50 rounded-lg p-3">
                 <div className="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-2 text-center">
-                  {/* Bedrooms */}
+                  {/* Experience */}
                   <div className="flex flex-col items-center">
                     <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center mb-2 border border-gray-200">
-                      <Bed className="w-6 h-6 text-[#2563EB]" />
+                      <Award className="w-6 h-6 text-[#2563EB]" />
                     </div>
-                    <div className="text-sm text-gray-600 mb-1">Bedrooms</div>
+                    <div className="text-sm text-gray-600 mb-1">Experience</div>
                     <div className="font-semibold text-gray-900 text-sm">
-                      {house.bedrooms}
+                      {serviceDetails.experience}
                     </div>
                   </div>
 
-                  {/* Bathrooms */}
+                  {/* Rating */}
                   <div className="flex flex-col items-center">
                     <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center mb-2 border border-gray-200">
-                      <Bath className="w-6 h-6 text-[#2563EB]" />
+                      <Star className="w-6 h-6 text-[#2563EB]" />
                     </div>
-                    <div className="text-sm text-gray-600 mb-1">Bathrooms</div>
+                    <div className="text-sm text-gray-600 mb-1">Rating</div>
                     <div className="font-semibold text-gray-900 text-sm">
-                      {house.bathrooms}
+                      {rating.toFixed(1)}/5
                     </div>
                   </div>
 
-                  {/* Area */}
+                  {/* Response Time */}
                   <div className="flex flex-col items-center">
                     <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center mb-2 border border-gray-200">
-                      <Square className="w-6 h-6 text-[#2563EB]" />
+                      <Clock className="w-6 h-6 text-[#2563EB]" />
                     </div>
-                    <div className="text-sm text-gray-600 mb-1">Area</div>
+                    <div className="text-sm text-gray-600 mb-1">Response</div>
                     <div className="font-semibold text-gray-900 text-sm">
-                      {house.sqft} sqft
+                      {serviceDetails.responseTime}
                     </div>
                   </div>
 
-                  {/* Type */}
+                  {/* Jobs Completed */}
                   <div className="flex flex-col items-center">
                     <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center mb-2 border border-gray-200">
-                      <Building className="w-6 h-6 text-[#2563EB]" />
+                      <Briefcase className="w-6 h-6 text-[#2563EB]" />
                     </div>
-                    <div className="text-sm text-gray-600 mb-1">Type</div>
-                    <div className="font-semibold text-gray-900 text-sm capitalize">
-                      {propertyType}
+                    <div className="text-sm text-gray-600 mb-1">Jobs Done</div>
+                    <div className="font-semibold text-gray-900 text-sm">
+                      {serviceDetails.jobsCompleted}
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* Additional Property Info */}
+              {/* Additional Service Info */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6 p-4 bg-blue-50 rounded-lg">
                 <div className="text-center">
-                  <Car className="w-5 h-5 text-[#2563EB] mx-auto mb-1" />
-                  <div className="text-xs text-gray-600">Parking</div>
-                  <div className="font-semibold text-gray-900 text-sm">
-                    Available
-                  </div>
-                </div>
-                <div className="text-center">
                   <Shield className="w-5 h-5 text-[#2563EB] mx-auto mb-1" />
-                  <div className="text-xs text-gray-600">Security</div>
+                  <div className="text-xs text-gray-600">Guarantee</div>
                   <div className="font-semibold text-gray-900 text-sm">
-                    24/7
+                    {serviceDetails.guarantee}
                   </div>
                 </div>
                 <div className="text-center">
-                  <Ruler className="w-5 h-5 text-[#2563EB] mx-auto mb-1" />
-                  <div className="text-xs text-gray-600">Year Built</div>
+                  <DollarSign className="w-5 h-5 text-[#2563EB] mx-auto mb-1" />
+                  <div className="text-xs text-gray-600">Payment</div>
                   <div className="font-semibold text-gray-900 text-sm">
-                    2020
+                    Multiple
                   </div>
                 </div>
                 <div className="text-center">
-                  <Users className="w-5 h-5 text-[#2563EB] mx-auto mb-1" />
-                  <div className="text-xs text-gray-600">Furnished</div>
+                  <MapPin className="w-5 h-5 text-[#2563EB] mx-auto mb-1" />
+                  <div className="text-xs text-gray-600">Travel Range</div>
                   <div className="font-semibold text-gray-900 text-sm">
-                    Yes
+                    {serviceDetails.travel}
+                  </div>
+                </div>
+                <div className="text-center">
+                  <Calendar className="w-5 h-5 text-[#2563EB] mx-auto mb-1" />
+                  <div className="text-xs text-gray-600">Availability</div>
+                  <div className="font-semibold text-gray-900 text-sm">
+                    {serviceDetails.availability}
                   </div>
                 </div>
               </div>
@@ -518,7 +518,7 @@ function HousingDetails() {
             {/* Tabs */}
             <div className="border-b border-gray-200">
               <div className="px-6 flex space-x-8 overflow-x-auto">
-                {["overview", "features", "location"].map((tab) => (
+                {["overview", "details", "location"].map((tab) => (
                   <button
                     key={tab}
                     onClick={() => setActiveTab(tab)}
@@ -540,16 +540,16 @@ function HousingDetails() {
                 <div className="space-y-6">
                   <div>
                     <h3 className="text-lg font-semibold text-gray-900 mb-3">
-                      Property Description
+                      Service Description
                     </h3>
                     <p className="text-gray-600 leading-relaxed">
-                      {house.description}
+                      {service.description}
                     </p>
                   </div>
 
                   <div>
                     <h3 className="text-lg font-semibold text-gray-900 mb-3">
-                      Property Features
+                      Service Features
                     </h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                       {features.map((feature, index) => (
@@ -563,36 +563,36 @@ function HousingDetails() {
                 </div>
               )}
 
-              {activeTab === "features" && (
+              {activeTab === "details" && (
                 <div className="space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                       <h4 className="font-semibold text-gray-900 mb-3">
-                        Property Information
+                        Service Information
                       </h4>
                       <div className="space-y-3">
                         <div className="flex justify-between py-2 border-b border-gray-100">
-                          <span className="text-gray-600">Property Type</span>
+                          <span className="text-gray-600">Service Type</span>
                           <span className="font-medium capitalize">
-                            {propertyType}
+                            {service.category || "professional"}
                           </span>
                         </div>
                         <div className="flex justify-between py-2 border-b border-gray-100">
-                          <span className="text-gray-600">Bedrooms</span>
+                          <span className="text-gray-600">Experience</span>
                           <span className="font-medium">
-                            {house.bedrooms}
+                            {serviceDetails.experience}
                           </span>
                         </div>
                         <div className="flex justify-between py-2 border-b border-gray-100">
-                          <span className="text-gray-600">Bathrooms</span>
+                          <span className="text-gray-600">Rating</span>
                           <span className="font-medium">
-                            {house.bathrooms}
+                            {rating.toFixed(1)}/5
                           </span>
                         </div>
                         <div className="flex justify-between py-2 border-b border-gray-100">
-                          <span className="text-gray-600">Area</span>
+                          <span className="text-gray-600">Jobs Completed</span>
                           <span className="font-medium">
-                            {house.sqft} sqft
+                            {serviceDetails.jobsCompleted}
                           </span>
                         </div>
                       </div>
@@ -600,26 +600,32 @@ function HousingDetails() {
 
                     <div>
                       <h4 className="font-semibold text-gray-900 mb-3">
-                        Additional Details
+                        Service Terms
                       </h4>
                       <div className="space-y-3">
                         <div className="flex justify-between py-2 border-b border-gray-100">
-                          <span className="text-gray-600">Listing Type</span>
-                          <span className="font-medium capitalize">
-                            {house.type}
+                          <span className="text-gray-600">Availability</span>
+                          <span className="font-medium">
+                            {serviceDetails.availability}
                           </span>
                         </div>
                         <div className="flex justify-between py-2 border-b border-gray-100">
-                          <span className="text-gray-600">Year Built</span>
-                          <span className="font-medium">2020</span>
+                          <span className="text-gray-600">Response Time</span>
+                          <span className="font-medium">
+                            {serviceDetails.responseTime}
+                          </span>
                         </div>
                         <div className="flex justify-between py-2 border-b border-gray-100">
-                          <span className="text-gray-600">Parking</span>
-                          <span className="font-medium">Available</span>
+                          <span className="text-gray-600">Guarantee</span>
+                          <span className="font-medium">
+                            {serviceDetails.guarantee}
+                          </span>
                         </div>
                         <div className="flex justify-between py-2 border-b border-gray-100">
-                          <span className="text-gray-600">Furnished</span>
-                          <span className="font-medium">Yes</span>
+                          <span className="text-gray-600">Travel Range</span>
+                          <span className="font-medium">
+                            {serviceDetails.travel}
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -631,22 +637,22 @@ function HousingDetails() {
                 <div className="space-y-6">
                   <div>
                     <h3 className="text-lg font-semibold text-gray-900 mb-3">
-                      Property Location
+                      Service Area
                     </h3>
                     <p className="text-gray-600 mb-4">
-                      {house.location}
+                      {service.location}
                     </p>
 
                     <div className="w-full h-80 rounded-lg overflow-hidden border border-gray-200">
                       <iframe
-                        title="Property Location Map"
+                        title="Service Location Map"
                         width="100%"
                         height="100%"
                         loading="lazy"
                         allowFullScreen
                         referrerPolicy="no-referrer-when-downgrade"
                         src={`https://www.google.com/maps?q=${encodeURIComponent(
-                          house.location
+                          service.location
                         )}&output=embed&zoom=15`}
                         className="border-0"
                       ></iframe>
@@ -663,21 +669,21 @@ function HousingDetails() {
           {/* Contact Card */}
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">
-              Contact Agent
+              Contact Provider
             </h3>
 
             <div className="flex items-center gap-4 mb-6">
               <img
-                src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=687"
-                alt={house.sellerName}
+                src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=687"
+                alt={service.sellerName || "Service Provider"}
                 className="w-16 h-16 rounded-full object-cover border-2 border-gray-200"
               />
               <div>
                 <h4 className="font-semibold text-gray-900">
-                  {house.sellerName}
+                  {service.sellerName || "Professional Service Provider"}
                 </h4>
                 <p className="text-gray-600 text-sm">
-                  Licensed Real Estate Agent
+                  Service Professional
                 </p>
                 <div className="flex items-center gap-1 mt-1">
                   {[1, 2, 3, 4, 5].map((star) => (
@@ -687,7 +693,7 @@ function HousingDetails() {
                     />
                   ))}
                   <span className="text-sm text-gray-600 ml-1">
-                    (24 reviews)
+                    (32 reviews)
                   </span>
                 </div>
               </div>
@@ -695,121 +701,128 @@ function HousingDetails() {
 
             <div className="space-y-3">
               <a
-                href={`mailto:${house.contactEmail}?subject=Inquiry about ${house.title}`}
+                href={`mailto:${service.contactEmail || "provider@example.com"}?subject=Inquiry about ${service.title}`}
                 className="w-full bg-[#2563EB] text-white py-3 px-4 rounded-lg cursor-pointer hover:bg-[#1D4ED8] transition-colors font-medium flex items-center justify-center gap-2"
               >
                 <Mail className="w-4 h-4" />
-                Email Agent
+                Email Provider
               </a>
 
               <button className="w-full border border-[#2563EB] text-[#2563EB] py-3 px-4 rounded-lg hover:bg-[#2563EB] hover:text-white transition-colors font-medium flex items-center justify-center gap-2 cursor-pointer">
                 <FaComments className="w-4 h-4" />
-                Chat with Agent
+                Chat with Provider
               </button>
             </div>
 
             <div className="mt-6 pt-6 border-t border-gray-200">
               <div className="text-center text-sm text-gray-600">
                 <Calendar className="w-4 h-4 inline mr-1" />
-                Listed {house.posted}
+                Posted {service.posted || "recently"}
               </div>
             </div>
           </div>
 
-          {/* Schedule Tour Card */}
+          {/* Service Pricing Card */}
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">
-              Schedule a Tour
+              Service Pricing
             </h3>
 
             <div className="space-y-4">
               <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                <div className="flex items-center gap-3">
-                  <Calendar className="w-6 h-6 text-green-600" />
-                  <div>
-                    <div className="font-semibold text-green-800">
-                      Available for Viewing
-                    </div>
-                    <div className="text-sm text-green-600">
-                      Flexible scheduling options
-                    </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-green-600 mb-1">
+                    {service.pay}
                   </div>
+                  <div className="text-sm text-green-700">Standard Rate</div>
+                </div>
+              </div>
+
+              <div className="space-y-2 text-sm text-gray-600">
+                <div className="flex justify-between">
+                  <span>Free Consultation</span>
+                  <span className="text-green-600 font-medium">Included</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Travel Fee</span>
+                  <span className="text-gray-900 font-medium">Waived</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Materials</span>
+                  <span className="text-gray-900 font-medium">Extra</span>
                 </div>
               </div>
 
               <button className="w-full bg-green-600 text-white py-3 px-4 rounded-lg hover:bg-green-700 transition-colors font-medium flex items-center justify-center gap-2 cursor-pointer">
-                <Calendar className="w-5 h-5" />
-                Schedule Tour
+                <DollarSign className="w-5 h-5" />
+                Get Free Quote
               </button>
 
               <p className="text-sm text-gray-600 text-center">
-                Contact agent to arrange a property viewing
+                Custom pricing available for larger projects
               </p>
             </div>
           </div>
 
-          {/* Similar Properties */}
+          {/* Similar Services */}
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
             <div className="p-6 border-b border-gray-200">
               <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
-                <Home className="w-5 h-5 text-[#2563EB]" />
-                Similar Properties ({similarProperties.length})
+                <Briefcase className="w-5 h-5 text-[#2563EB]" />
+                Similar Services ({similarServices.length})
               </h3>
             </div>
 
             <div className="divide-y divide-gray-100 max-h-[600px] overflow-y-auto">
-              {similarProperties.map((similarHouse) => {
-                const similarPropertyType = extractPropertyType(similarHouse);
-                const similarPropertyTypeColor = getPropertyTypeColor(similarPropertyType);
+              {similarServices.map((similarService) => {
+                const similarServiceType = extractServiceType(similarService);
+                const similarServiceTypeColor = getServiceTypeColor(similarServiceType);
 
                 return (
                   <Link
-                    key={similarHouse.id}
-                    to={`/housing/${similarHouse.id}`}
+                    key={similarService.id}
+                    to={`/services/${similarService.id}`}
                     className="block p-4 hover:bg-gray-50 transition-colors border-b border-gray-100 last:border-b-0"
                   >
                     <div className="flex gap-3">
                       <img
-                        src={getPropertyImage(similarHouse)}
-                        alt={similarHouse.title}
+                        src={getServiceImage(similarService)}
+                        alt={similarService.title}
                         className="w-20 h-16 rounded-lg object-cover flex-shrink-0"
                       />
                       <div className="flex-1 min-w-0">
                         <div className="flex justify-between items-start mb-1">
                           <h4 className="font-semibold text-gray-900 text-sm line-clamp-1 flex-1">
-                            {similarHouse.title}
+                            {similarService.title}
                           </h4>
                           <span
-                            className={`text-xs px-2 py-1 rounded-full flex-shrink-0 ml-2 ${similarPropertyTypeColor}`}
+                            className={`text-xs px-2 py-1 rounded-full flex-shrink-0 ml-2 ${similarServiceTypeColor}`}
                           >
-                            {similarPropertyType}
+                            {similarServiceType}
                           </span>
                         </div>
 
                         <div className="flex items-center gap-1 mb-2">
                           <MapPin className="w-3 h-3 text-gray-400" />
                           <p className="text-xs text-gray-600 truncate">
-                            {similarHouse.location?.split(",")[0] ||
-                              similarHouse.location}
+                            {similarService.location?.split(",")[0] ||
+                              similarService.location}
                           </p>
                         </div>
 
                         <div className="flex items-center gap-2 text-xs text-gray-500 mb-2">
-                          <Bed className="w-3 h-3" />
-                          <span>{similarHouse.bedrooms} beds</span>
-                          <span>•</span>
-                          <Bath className="w-3 h-3" />
-                          <span>{similarHouse.bathrooms} baths</span>
+                          <DollarSign className="w-3 h-3" />
+                          <span className="font-semibold text-green-600">
+                            {similarService.pay}
+                          </span>
                         </div>
 
                         <div className="flex items-center justify-between">
                           <span className="font-bold text-[#2563EB] text-sm">
-                            {similarHouse.type === "rent"
-                              ? `$${similarHouse.price}/mo`
-                              : `$${similarHouse.price.toLocaleString()}`}
+                            {similarService.pay}
                           </span>
                           <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">
-                            {similarHouse.posted}
+                            {similarService.posted || "recently"}
                           </span>
                         </div>
                       </div>
@@ -821,10 +834,10 @@ function HousingDetails() {
 
             <div className="p-4 bg-gray-50 border-t border-gray-200">
               <Link
-                to="/housing"
+                to="/services"
                 className="w-full text-center text-[#2563EB] font-medium hover:text-[#1D4ED8] transition-colors text-sm inline-flex items-center justify-center gap-1"
               >
-                View All Properties
+                View All Services
                 <ArrowLeft className="w-4 h-4 transform rotate-180" />
               </Link>
             </div>
@@ -835,4 +848,4 @@ function HousingDetails() {
   );
 }
 
-export default HousingDetails;
+export default ServicesDetails;

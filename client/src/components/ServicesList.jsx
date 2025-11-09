@@ -1,4 +1,4 @@
-// src/components/HousingList.jsx
+// src/components/ServicesList.jsx
 import React, {
   useState,
   useEffect,
@@ -9,110 +9,86 @@ import React, {
 import { Link, useNavigate, useParams } from "react-router-dom";
 import {
   MapPin,
-  Bed,
   Search,
   ChevronLeft,
   ChevronDown,
   ChevronRight as ChevronRightSmall,
   Filter,
   Heart,
-  Bath,
-  Square,
-  Home,
-  Building,
   Calendar,
   Users,
+  Clock,
   DollarSign,
+  Star,
+  Briefcase,
 } from "lucide-react";
-import { housingData } from "../jsonData/index.js";
+import { servicesData } from "../jsonData/index.js";
 import { locationData } from "../jsonData/locations.js";
 
-function HousingList() {
+function ServicesList() {
   const navigate = useNavigate();
   const { category } = useParams();
 
-  // Use housing data from JSON file
-  const allHouses = housingData.houses;
+  // Use services data from JSON file
+  const allServices = servicesData.services;
 
-  // Enhanced housing subcategory mapping
-  const housingSubcategories = {
-    "apts-for-rent": {
-      name: "Apts/Housing for Rent",
-      filter: (house) =>
-        house.type === "rent" && house.propertyType === "apartment",
+  // Enhanced services subcategory mapping
+  const servicesSubcategories = {
+    "home-services": {
+      name: "Home Services",
+      filter: (service) => ["cleaning", "repair", "moving"].includes(extractServiceType(service)),
     },
-    "housing-swap": {
-      name: "Housing Swap",
-      filter: (house) => house.type === "swap",
+    "professional-services": {
+      name: "Professional Services",
+      filter: (service) => ["technical", "creative", "education"].includes(extractServiceType(service)),
     },
-    "housing-wanted": {
-      name: "Housing Wanted",
-      filter: (house) => house.type === "wanted",
+    "health-fitness": {
+      name: "Health & Fitness",
+      filter: (service) => ["health", "fitness"].includes(extractServiceType(service)),
     },
-    "office-commercial": {
-      name: "Office/Commercial",
-      filter: (house) =>
-        house.propertyType === "commercial" || house.propertyType === "office",
+    "pet-services": {
+      name: "Pet Services",
+      filter: (service) => extractServiceType(service) === "pet",
     },
-    "parking-storage": {
-      name: "Parking & Storage",
-      filter: (house) =>
-        house.propertyType === "parking" || house.propertyType === "storage",
+    "creative-services": {
+      name: "Creative Services",
+      filter: (service) => ["creative", "design"].includes(extractServiceType(service)),
     },
-    "real-estate": {
-      name: "Real Estate",
-      filter: (house) => house.propertyType !== "apartment",
+    "technical-services": {
+      name: "Technical Services",
+      filter: (service) => ["technical", "development"].includes(extractServiceType(service)),
     },
-    "real-estate-for-sale": {
-      name: "Real Estate for Sale",
-      filter: (house) =>
-        house.type === "sale" && house.propertyType !== "apartment",
-    },
-    "real-estate-wanted": {
-      name: "Real Estate Wanted",
-      filter: (house) =>
-        house.type === "wanted" && house.propertyType !== "apartment",
-    },
-    "rooms-temporary": {
-      name: "Rooms & Temporary",
-      filter: (house) =>
-        house.propertyType === "room" || house.propertyType === "shared",
-    },
-    "vacation-rentals": {
-      name: "Vacation Rentals",
-      filter: (house) =>
-        house.propertyType === "vacation" || house.type === "vacation",
+    "general-services": {
+      name: "General Services",
+      filter: () => true,
     },
   };
 
   // Get current category info
-  const currentCategory = housingSubcategories[category] || {
-    name: "Housing",
+  const currentCategory = servicesSubcategories[category] || {
+    name: "Services",
     filter: () => true,
   };
 
   // Enhanced state management - matching CommunityList functionality
   const [searchTerm, setSearchTerm] = useState("");
-  const [propertyTypesSelected, setPropertyTypesSelected] = useState(new Set());
-  const [bedroomsSelected, setBedroomsSelected] = useState(new Set());
-  const [bathroomsSelected, setBathroomsSelected] = useState(new Set());
-  const [priceRange, setPriceRange] = useState({ min: 0, max: 1000000 });
-  const [listingType, setListingType] = useState("all");
+  const [serviceTypesSelected, setServiceTypesSelected] = useState(new Set());
+  const [priceRange, setPriceRange] = useState({ min: 0, max: 1000 });
+  const [experienceFilter, setExperienceFilter] = useState("all"); // all, beginner, intermediate, expert
   const [currentPage, setCurrentPage] = useState(1);
-  const [savedHouses, setSavedHouses] = useState([]);
+  const [savedServices, setSavedServices] = useState([]);
   const [sortBy, setSortBy] = useState("newest");
   const [showFilters, setShowFilters] = useState(false);
   const [openSections, setOpenSections] = useState({
-    listingType: true,
+    serviceType: true,
     priceRange: true,
-    categories: true,
+    experience: true,
+    rating: true,
     locations: true,
-    bhk: true,
-    bathrooms: true,
   });
 
-  // New state for current property type in breadcrumb and filtering
-  const [currentPropertyType, setCurrentPropertyType] = useState(null);
+  // New state for current service type in breadcrumb and filtering
+  const [currentServiceType, setCurrentServiceType] = useState(null);
   const [breadcrumbHistory, setBreadcrumbHistory] = useState([]);
 
   // Location filters
@@ -127,34 +103,58 @@ function HousingList() {
 
   const itemsPerPage = 12;
 
-  // Clear property type when category changes
+  // Clear service type when category changes
   useEffect(() => {
-    setCurrentPropertyType(null);
+    setCurrentServiceType(null);
     setBreadcrumbHistory([]);
   }, [category]);
 
-  // Enhanced property type extraction with fallback
-  const extractPropertyType = (house) => {
-    if (house.propertyType) return house.propertyType;
+  // Enhanced service type extraction with fallback
+  const extractServiceType = (service) => {
+    const title = service.title.toLowerCase();
+    const description = service.description.toLowerCase();
 
-    const title = house.title.toLowerCase();
-    const description = house.description.toLowerCase();
-
-    if (title.includes("apartment") || description.includes("apartment")) return "apartment";
-    if (title.includes("villa") || description.includes("villa")) return "villa";
-    if (title.includes("house") || description.includes("house")) return "house";
-    if (title.includes("condo") || description.includes("condo")) return "condo";
-    if (title.includes("studio") || description.includes("studio")) return "studio";
-    if (title.includes("commercial") || description.includes("office")) return "commercial";
-    if (title.includes("land") || description.includes("plot")) return "land";
+    if (title.includes("clean") || description.includes("clean")) return "cleaning";
+    if (title.includes("repair") || description.includes("repair") || 
+        title.includes("fix") || description.includes("fix")) return "repair";
+    if (title.includes("dog") || title.includes("pet") || 
+        description.includes("dog") || description.includes("pet")) return "pet";
+    if (title.includes("design") || title.includes("photo") || 
+        title.includes("creative") || description.includes("design")) return "creative";
+    if (title.includes("tutor") || title.includes("lesson") || 
+        description.includes("learn") || description.includes("teach")) return "education";
+    if (title.includes("train") || title.includes("fitness") || 
+        title.includes("yoga") || description.includes("fitness")) return "health";
+    if (title.includes("web") || title.includes("seo") || 
+        title.includes("development") || description.includes("technical")) return "technical";
+    if (title.includes("move") || description.includes("moving")) return "moving";
+    if (title.includes("garden") || description.includes("landscap")) return "gardening";
     
-    return "residential";
+    return "professional";
   };
 
-  // Enhanced property type options with counts
-  const propertyTypeOptions = useMemo(() => {
-    const categoryHouses = allHouses.filter(currentCategory.filter);
-    const types = categoryHouses.map(extractPropertyType);
+  // Extract rating from service (for demo purposes)
+  const extractRating = (service) => {
+    const ratings = [4.2, 4.5, 4.8, 4.0, 4.7, 4.9, 4.3, 4.6];
+    return ratings[service.id % ratings.length];
+  };
+
+  // Extract experience level from description
+  const extractExperience = (service) => {
+    const description = service.description.toLowerCase();
+    if (description.includes("expert") || description.includes("professional") || description.includes("certified"))
+      return "expert";
+    if (description.includes("experienced") || description.includes("intermediate"))
+      return "intermediate";
+    if (description.includes("beginner") || description.includes("new"))
+      return "beginner";
+    return "intermediate"; // default
+  };
+
+  // Enhanced service type options with counts
+  const serviceTypeOptions = useMemo(() => {
+    const categoryServices = allServices.filter(currentCategory.filter);
+    const types = categoryServices.map(extractServiceType);
     const typeCounts = types.reduce((acc, type) => {
       acc[type] = (acc[type] || 0) + 1;
       return acc;
@@ -163,39 +163,44 @@ function HousingList() {
     return Object.entries(typeCounts)
       .sort(([, a], [, b]) => b - a)
       .map(([type, count]) => ({ type, count }));
-  }, [allHouses, currentCategory]);
+  }, [allServices, currentCategory]);
 
   // Enhanced counts computation
   const counts = useMemo(() => {
-    const categoryHouses = allHouses.filter(currentCategory.filter);
+    const categoryServices = allServices.filter(currentCategory.filter);
     const c = {
-      propertyTypes: {},
+      serviceTypes: {},
       locations: {},
       prices: { min: 0, max: 0 },
-      bedrooms: {},
-      bathrooms: {},
+      experience: { beginner: 0, intermediate: 0, expert: 0 },
+      ratings: { high: 0, medium: 0, low: 0 },
     };
 
-    categoryHouses.forEach((h) => {
-      const propertyType = extractPropertyType(h);
-      c.propertyTypes[propertyType] = (c.propertyTypes[propertyType] || 0) + 1;
-      c.locations[h.location] = (c.locations[h.location] || 0) + 1;
+    categoryServices.forEach((s) => {
+      const serviceType = extractServiceType(s);
+      c.serviceTypes[serviceType] = (c.serviceTypes[serviceType] || 0) + 1;
+      c.locations[s.location] = (c.locations[s.location] || 0) + 1;
 
-      // bedrooms
-      const bKey = h.bedrooms >= 4 ? "4+" : String(h.bedrooms);
-      c.bedrooms[bKey] = (c.bedrooms[bKey] || 0) + 1;
-      // bathrooms
-      const baKey = h.bathrooms >= 4 ? "4+" : String(h.bathrooms);
-      c.bathrooms[baKey] = (c.bathrooms[baKey] || 0) + 1;
+      const experience = extractExperience(s);
+      c.experience[experience] = (c.experience[experience] || 0) + 1;
+
+      const rating = extractRating(s);
+      if (rating >= 4.5) c.ratings.high++;
+      else if (rating >= 4.0) c.ratings.medium++;
+      else c.ratings.low++;
     });
 
     // Calculate price range
-    const prices = categoryHouses.map((h) => h.price).filter(p => p > 0);
+    const prices = categoryServices.map((s) => {
+      const priceStr = s.pay || "$0";
+      return parseInt(priceStr.replace(/[^0-9]/g, ""), 10) || 0;
+    }).filter(p => p > 0);
+    
     c.prices.min = prices.length ? Math.min(...prices) : 0;
-    c.prices.max = prices.length ? Math.max(...prices) : 1000000;
+    c.prices.max = prices.length ? Math.max(...prices) : 1000;
 
     return c;
-  }, [allHouses, currentCategory]);
+  }, [allServices, currentCategory]);
 
   // Initialize price range
   useEffect(() => {
@@ -246,8 +251,8 @@ function HousingList() {
       <div className="slider mb-4">
         <div className="slider__track" />
         <div ref={range} className="slider__range" />
-        <div className="slider__left-value">${minVal.toLocaleString()}</div>
-        <div className="slider__right-value">${maxVal.toLocaleString()}</div>
+        <div className="slider__left-value">${minVal}</div>
+        <div className="slider__right-value">${maxVal}</div>
 
         <input
           type="range"
@@ -278,94 +283,80 @@ function HousingList() {
     );
   };
 
-  // Enhanced filtering logic with property type filtering
-  const filteredHouses = useMemo(() => {
-    return allHouses.filter((house) => {
+  // Enhanced filtering logic with service type filtering
+  const filteredServices = useMemo(() => {
+    return allServices.filter((service) => {
       // First apply category filter
-      if (!currentCategory.filter(house)) return false;
+      if (!currentCategory.filter(service)) return false;
 
-      // Apply property type filter from breadcrumb
-      if (currentPropertyType) {
-        const propertyType = extractPropertyType(house);
-        if (propertyType !== currentPropertyType) return false;
+      // Apply service type filter from breadcrumb
+      if (currentServiceType) {
+        const serviceType = extractServiceType(service);
+        if (serviceType !== currentServiceType) return false;
       }
 
       const matchesSearch =
         searchTerm === "" ||
-        house.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        house.location.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        house.description.toLowerCase().includes(searchTerm.toLowerCase());
+        service.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        service.location.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        service.description.toLowerCase().includes(searchTerm.toLowerCase());
 
-      const propertyType = extractPropertyType(house);
-      const propertyTypeMatch =
-        propertyTypesSelected.size === 0 || propertyTypesSelected.has(propertyType);
+      const serviceType = extractServiceType(service);
+      const serviceTypeMatch =
+        serviceTypesSelected.size === 0 || serviceTypesSelected.has(serviceType);
 
       // Price filtering
+      const servicePrice = parseInt((service.pay || "$0").replace(/[^0-9]/g, ""), 10) || 0;
       const matchesPrice =
-        house.price >= priceRange.min && house.price <= priceRange.max;
+        servicePrice >= priceRange.min && servicePrice <= priceRange.max;
 
-      // Listing type filtering
-      const matchesListingType =
-        listingType === "all" || house.type === listingType;
+      // Experience filtering
+      const experience = extractExperience(service);
+      const matchesExperience =
+        experienceFilter === "all" ||
+        (experienceFilter === "beginner" && experience === "beginner") ||
+        (experienceFilter === "intermediate" && experience === "intermediate") ||
+        (experienceFilter === "expert" && experience === "expert");
 
-      // Bedrooms filtering
-      let bedroomsMatch = true;
-      if (bedroomsSelected.size > 0) {
-        bedroomsMatch = false;
-        for (const sel of bedroomsSelected) {
-          if (sel === "4+" && house.bedrooms >= 4) bedroomsMatch = true;
-          else if (String(house.bedrooms) === sel) bedroomsMatch = true;
-        }
-      }
-
-      // Bathrooms filtering
-      let bathroomsMatch = true;
-      if (bathroomsSelected.size > 0) {
-        bathroomsMatch = false;
-        for (const sel of bathroomsSelected) {
-          if (sel === "4+" && house.bathrooms >= 4) bathroomsMatch = true;
-          else if (String(house.bathrooms) === sel) bathroomsMatch = true;
-        }
-      }
+      // Rating filtering
+      const rating = extractRating(service);
+      const matchesRating = true; // Add rating filter logic if needed
 
       // Location - hierarchical
       let matchesLocation = true;
       if (selectedSubLocation) {
-        matchesLocation = house.location === selectedSubLocation;
+        matchesLocation = service.location === selectedSubLocation;
       } else if (selectedCity) {
-        matchesLocation = selectedCity.subLocations.includes(house.location);
+        matchesLocation = selectedCity.subLocations.includes(service.location);
       } else if (selectedState) {
         const allSublocsInState = selectedState.cities.flatMap(
           (c) => c.subLocations
         );
-        matchesLocation = allSublocsInState.includes(house.location);
+        matchesLocation = allSublocsInState.includes(service.location);
       } else if (selectedCountry) {
         const allSublocsInCountry = selectedCountry.states.flatMap((s) =>
           s.cities.flatMap((c) => c.subLocations)
         );
-        matchesLocation = allSublocsInCountry.includes(house.location);
+        matchesLocation = allSublocsInCountry.includes(service.location);
       }
 
       return (
         matchesSearch &&
-        propertyTypeMatch &&
+        serviceTypeMatch &&
         matchesPrice &&
-        matchesListingType &&
-        bedroomsMatch &&
-        bathroomsMatch &&
+        matchesExperience &&
+        matchesRating &&
         matchesLocation
       );
     });
   }, [
-    allHouses,
+    allServices,
     currentCategory,
-    currentPropertyType,
+    currentServiceType,
     searchTerm,
-    propertyTypesSelected,
+    serviceTypesSelected,
     priceRange,
-    listingType,
-    bedroomsSelected,
-    bathroomsSelected,
+    experienceFilter,
     selectedCountry,
     selectedState,
     selectedCity,
@@ -373,12 +364,19 @@ function HousingList() {
   ]);
 
   // Enhanced sorting options
-  const sortedHouses = [...filteredHouses].sort((a, b) => {
+  const sortedServices = [...filteredServices].sort((a, b) => {
+    const priceA = parseInt((a.pay || "$0").replace(/[^0-9]/g, ""), 10) || 0;
+    const priceB = parseInt((b.pay || "$0").replace(/[^0-9]/g, ""), 10) || 0;
+    const ratingA = extractRating(a);
+    const ratingB = extractRating(b);
+
     switch (sortBy) {
       case "price-low":
-        return a.price - b.price;
+        return priceA - priceB;
       case "price-high":
-        return b.price - a.price;
+        return priceB - priceA;
+      case "rating":
+        return ratingB - ratingA;
       case "newest":
       default:
         return b.id - a.id;
@@ -386,10 +384,10 @@ function HousingList() {
   });
 
   // Pagination
-  const indexOfLastHouse = currentPage * itemsPerPage;
-  const indexOfFirstHouse = indexOfLastHouse - itemsPerPage;
-  const currentHouses = sortedHouses.slice(indexOfFirstHouse, indexOfLastHouse);
-  const totalPages = Math.ceil(sortedHouses.length / itemsPerPage);
+  const indexOfLastService = currentPage * itemsPerPage;
+  const indexOfFirstService = indexOfLastService - itemsPerPage;
+  const currentServices = sortedServices.slice(indexOfFirstService, indexOfLastService);
+  const totalPages = Math.ceil(sortedServices.length / itemsPerPage);
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -397,62 +395,60 @@ function HousingList() {
   };
 
   // Enhanced handlers
-  const toggleSave = (house, e) => {
+  const toggleSave = (service, e) => {
     e.stopPropagation();
     let newSaved;
-    const isSaved = savedHouses.some((h) => h.id === house.id);
+    const isSaved = savedServices.some((h) => h.id === service.id);
     if (isSaved) {
-      newSaved = savedHouses.filter((h) => h.id !== house.id);
+      newSaved = savedServices.filter((h) => h.id !== service.id);
     } else {
-      newSaved = [...savedHouses, house];
+      newSaved = [...savedServices, service];
     }
-    setSavedHouses(newSaved);
-    localStorage.setItem("savedHouses", JSON.stringify(newSaved));
+    setSavedServices(newSaved);
+    localStorage.setItem("savedServices", JSON.stringify(newSaved));
   };
 
   const resetFilters = () => {
     setSearchTerm("");
-    setPropertyTypesSelected(new Set());
-    setBedroomsSelected(new Set());
-    setBathroomsSelected(new Set());
+    setServiceTypesSelected(new Set());
     setPriceRange({ min: counts.prices.min, max: counts.prices.max });
-    setListingType("all");
+    setExperienceFilter("all");
     setSelectedCountry(null);
     setSelectedState(null);
     setSelectedCity(null);
     setSelectedSubLocation(null);
     setSortBy("newest");
-    setCurrentPropertyType(null);
+    setCurrentServiceType(null);
     setBreadcrumbHistory([]);
   };
 
-  // Handle property type click for breadcrumb and filtering
-  const handlePropertyTypeClick = (propertyType) => {
-    setCurrentPropertyType(propertyType);
+  // Handle service type click for breadcrumb and filtering
+  const handleServiceTypeClick = (serviceType) => {
+    setCurrentServiceType(serviceType);
     setCurrentPage(1);
-    setBreadcrumbHistory(prev => [...prev, { type: 'propertyType', value: propertyType }]);
+    setBreadcrumbHistory(prev => [...prev, { type: 'serviceType', value: serviceType }]);
   };
 
   // Handle breadcrumb navigation
   const handleBreadcrumbClick = (breadcrumbItem, index) => {
-    if (breadcrumbItem.type === 'propertyType') {
-      setCurrentPropertyType(breadcrumbItem.value);
+    if (breadcrumbItem.type === 'serviceType') {
+      setCurrentServiceType(breadcrumbItem.value);
       setBreadcrumbHistory(prev => prev.slice(0, index));
     }
   };
 
-  // Clear property type filter
-  const clearPropertyTypeFilter = () => {
-    setCurrentPropertyType(null);
+  // Clear service type filter
+  const clearServiceTypeFilter = () => {
+    setCurrentServiceType(null);
     setBreadcrumbHistory([]);
   };
 
-  // Handle house card click
-  const handleHouseCardClick = (house) => {
-    const propertyType = extractPropertyType(house);
-    setCurrentPropertyType(propertyType);
-    setBreadcrumbHistory([{ type: 'propertyType', value: propertyType }]);
-    navigate(`/housing/${house.id}`);
+  // Handle service card click
+  const handleServiceCardClick = (service) => {
+    const serviceType = extractServiceType(service);
+    setCurrentServiceType(serviceType);
+    setBreadcrumbHistory([{ type: 'serviceType', value: serviceType }]);
+    navigate(`/services/${service.id}`);
   };
 
   // Helper functions for location tree
@@ -486,67 +482,90 @@ function HousingList() {
     setOpenCities(newOpenCities);
   };
 
-  // Get property type badge color
-  const getPropertyTypeColor = (propertyType) => {
-    switch (propertyType) {
-      case "apartment":
+  // Get service type badge color
+  const getServiceTypeColor = (serviceType) => {
+    switch (serviceType) {
+      case "cleaning":
         return "bg-blue-100 text-blue-800";
-      case "villa":
-        return "bg-purple-100 text-purple-800";
-      case "house":
-        return "bg-green-100 text-green-800";
-      case "condo":
+      case "repair":
         return "bg-orange-100 text-orange-800";
-      case "studio":
-        return "bg-pink-100 text-pink-800";
-      case "commercial":
+      case "pet":
+        return "bg-green-100 text-green-800";
+      case "creative":
+        return "bg-purple-100 text-purple-800";
+      case "education":
         return "bg-indigo-100 text-indigo-800";
-      case "land":
-        return "bg-yellow-100 text-yellow-800";
-      case "residential":
+      case "health":
+        return "bg-red-100 text-red-800";
+      case "technical":
         return "bg-teal-100 text-teal-800";
+      case "moving":
+        return "bg-amber-100 text-amber-800";
+      case "gardening":
+        return "bg-emerald-100 text-emerald-800";
       default:
         return "bg-gray-100 text-gray-800";
     }
   };
 
-  // Get listing type badge color
-  const getListingTypeColor = (type) => {
-    switch (type) {
-      case "rent":
-        return "bg-blue-100 text-blue-800";
-      case "sale":
+  // Get experience badge color
+  const getExperienceColor = (experience) => {
+    switch (experience) {
+      case "beginner":
         return "bg-green-100 text-green-800";
-      case "swap":
-        return "bg-purple-100 text-purple-800";
-      case "wanted":
-        return "bg-orange-100 text-orange-800";
+      case "intermediate":
+        return "bg-yellow-100 text-yellow-800";
+      case "expert":
+        return "bg-red-100 text-red-800";
       default:
         return "bg-gray-100 text-gray-800";
     }
   };
 
-  // Different images for different property types
-  const getPropertyImage = (house) => {
-    const propertyType = extractPropertyType(house);
+  // Render star rating
+  const renderStars = (rating) => {
+    return (
+      <div className="flex items-center">
+        {[1, 2, 3, 4, 5].map((star) => (
+          <Star
+            key={star}
+            className={`w-3 h-3 ${
+              star <= Math.floor(rating)
+                ? "text-yellow-400 fill-current"
+                : "text-gray-300"
+            }`}
+          />
+        ))}
+        <span className="ml-1 text-xs text-gray-600">{rating.toFixed(1)}</span>
+      </div>
+    );
+  };
 
-    switch (propertyType) {
-      case "apartment":
-        return "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300&q=80";
-      case "villa":
-        return "https://images.unsplash.com/photo-1613490493576-7fde63acd811?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300&q=80";
-      case "house":
-        return "https://images.unsplash.com/photo-1518780664697-55e3ad937233?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300&q=80";
-      case "condo":
-        return "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300&q=80";
-      case "studio":
-        return "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300&q=80";
-      case "commercial":
-        return "https://images.unsplash.com/photo-1497366811353-6870744d04b2?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300&q=80";
-      case "land":
-        return "https://images.unsplash.com/photo-1500382017468-9049fed747ef?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300&q=80";
+  // Different images for different service types
+  const getServiceImage = (service) => {
+    const serviceType = extractServiceType(service);
+
+    switch (serviceType) {
+      case "cleaning":
+        return "https://images.unsplash.com/photo-1581578731548-c64695cc6952?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300&q=80";
+      case "repair":
+        return "https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300&q=80";
+      case "pet":
+        return "https://images.unsplash.com/photo-1450778869180-41d0601e046e?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300&q=80";
+      case "creative":
+        return "https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300&q=80";
+      case "education":
+        return "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300&q=80";
+      case "health":
+        return "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300&q=80";
+      case "technical":
+        return "https://images.unsplash.com/photo-1517077304055-6e89abbf09b0?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300&q=80";
+      case "moving":
+        return "https://images.unsplash.com/photo-1541976590-713941681591?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300&q=80";
+      case "gardening":
+        return "https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300&q=80";
       default:
-        return "https://images.unsplash.com/photo-1568605114967-8130f3a36994?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300&q=80";
+        return "https://images.unsplash.com/photo-1551135049-8a33b5883817?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300&q=80";
     }
   };
 
@@ -647,18 +666,18 @@ function HousingList() {
                 Home
               </Link>
               <ChevronRightSmall className="w-4 h-4" />
-              <Link to="/housing" className="hover:text-[#2563EB]">
-                Housing
+              <Link to="/services" className="hover:text-[#2563EB]">
+                Services
               </Link>
               {category && (
                 <>
                   <ChevronRightSmall className="w-4 h-4" />
                   <Link 
-                    to={`/housing/${category}`}
+                    to={`/services/${category}`}
                     className="hover:text-[#2563EB] capitalize"
                     onClick={(e) => {
                       e.preventDefault();
-                      setCurrentPropertyType(null);
+                      setCurrentServiceType(null);
                       setBreadcrumbHistory([]);
                     }}
                   >
@@ -677,25 +696,25 @@ function HousingList() {
                   </button>
                 </React.Fragment>
               ))}
-              {currentPropertyType && breadcrumbHistory.length === 0 && (
+              {currentServiceType && breadcrumbHistory.length === 0 && (
                 <>
                   <ChevronRightSmall className="w-4 h-4" />
                   <span className="text-gray-900 font-medium capitalize">
-                    {currentPropertyType}
+                    {currentServiceType}
                   </span>
                 </>
               )}
             </div>
 
             {/* Active Filter Badge */}
-            {currentPropertyType && (
+            {currentServiceType && (
               <div className="flex items-center space-x-2">
                 <span className="text-sm text-gray-600">Filtered by:</span>
-                <span className={`px-2 py-1 rounded text-xs font-medium ${getPropertyTypeColor(currentPropertyType)}`}>
-                  {currentPropertyType}
+                <span className={`px-2 py-1 rounded text-xs font-medium ${getServiceTypeColor(currentServiceType)}`}>
+                  {currentServiceType}
                 </span>
                 <button
-                  onClick={clearPropertyTypeFilter}
+                  onClick={clearServiceTypeFilter}
                   className="text-gray-400 hover:text-gray-600 text-sm"
                 >
                   × Clear
@@ -720,6 +739,7 @@ function HousingList() {
                 <option value="newest">Latest First</option>
                 <option value="price-low">Price: Low to High</option>
                 <option value="price-high">Price: High to Low</option>
+                <option value="rating">Highest Rated</option>
               </select>
             </div>
           </div>
@@ -727,12 +747,12 @@ function HousingList() {
           {/* Results Count */}
           <div className="mb-3 flex justify-between items-center">
             <span className="text-sm text-gray-600">
-              <span className="text-black font-medium">Popular Searches:</span>{" "}
-              {["Apartments", "Villas", "Family Homes", "Commercial Spaces"].join(", ")}
+              <span className="text-black font-medium">Popular Services:</span>{" "}
+              {["Cleaning", "Repair", "Tutoring", "Pet Care"].join(", ")}
             </span>
             <span className="text-sm text-gray-600">
-              Showing {sortedHouses.length} propert{sortedHouses.length !== 1 ? 'ies' : 'y'}
-              {currentPropertyType && ` in ${currentPropertyType}`}
+              Showing {sortedServices.length} service{sortedServices.length !== 1 ? 's' : ''}
+              {currentServiceType && ` in ${currentServiceType}`}
             </span>
           </div>
         </div>
@@ -764,54 +784,54 @@ function HousingList() {
                     type="text"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    placeholder="Search properties..."
+                    placeholder="Search services..."
                     className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2563EB] focus:border-[#2563EB]"
                   />
                 </div>
               </div>
 
-              {/* Property Types */}
+              {/* Service Types */}
               <div className="border-t border-gray-100 pt-3 mt-3">
                 <button
                   className="w-full flex items-center justify-between text-left"
                   onClick={() =>
                     setOpenSections((prev) => ({
                       ...prev,
-                      categories: !prev.categories,
+                      serviceType: !prev.serviceType,
                     }))
                   }
                 >
-                  <span className="text-sm font-medium">Property Types</span>
+                  <span className="text-sm font-medium">Service Types</span>
                   <ChevronDown
                     className={`w-4 h-4 transform transition-transform ${
-                      openSections.categories ? "rotate-180" : ""
+                      openSections.serviceType ? "rotate-180" : ""
                     }`}
                   />
                 </button>
 
-                {openSections.categories && (
+                {openSections.serviceType && (
                   <div className="mt-3 max-h-48 overflow-y-auto pr-2 custom-scrollbar">
-                    {propertyTypeOptions.map(({ type, count }) => (
+                    {serviceTypeOptions.map(({ type, count }) => (
                       <div key={type} className="flex items-center justify-between py-2 text-sm text-gray-700">
                         <div className="flex items-center space-x-2 flex-1">
                           <input
                             type="checkbox"
-                            checked={propertyTypesSelected.has(type)}
+                            checked={serviceTypesSelected.has(type)}
                             onChange={() => {
-                              const newSet = new Set(propertyTypesSelected);
+                              const newSet = new Set(serviceTypesSelected);
                               if (newSet.has(type)) {
                                 newSet.delete(type);
                               } else {
                                 newSet.add(type);
                               }
-                              setPropertyTypesSelected(newSet);
+                              setServiceTypesSelected(newSet);
                             }}
                             className="w-4 h-4 border-gray-300 rounded-sm"
                           />
                           <button
-                            onClick={() => handlePropertyTypeClick(type)}
+                            onClick={() => handleServiceTypeClick(type)}
                             className={`capitalize text-left transition-colors flex-1 ${
-                              currentPropertyType === type 
+                              currentServiceType === type 
                                 ? 'text-[#2563EB] font-medium' 
                                 : 'hover:text-[#2563EB]'
                             }`}
@@ -821,56 +841,6 @@ function HousingList() {
                         </div>
                         <span className="text-gray-400 text-xs">({count})</span>
                       </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              <div className="bg-gray-400 w-full h-[1px] my-5" />
-
-              {/* Listing Type */}
-              <div className="border-t border-gray-100 pt-3 mt-3">
-                <button
-                  className="w-full flex items-center justify-between text-left"
-                  onClick={() =>
-                    setOpenSections((prev) => ({
-                      ...prev,
-                      listingType: !prev.listingType,
-                    }))
-                  }
-                >
-                  <span className="text-sm font-medium">Listing Type</span>
-                  <ChevronDown
-                    className={`w-4 h-4 transform transition-transform ${
-                      openSections.listingType ? "rotate-180" : ""
-                    }`}
-                  />
-                </button>
-                {openSections.listingType && (
-                  <div className="mt-3 space-y-2">
-                    {[
-                      { value: "all", label: "All Listings", count: sortedHouses.length },
-                      { value: "rent", label: "For Rent", count: cnt(counts, "rent") },
-                      { value: "sale", label: "For Sale", count: cnt(counts, "sale") },
-                    ].map((option) => (
-                      <label
-                        key={option.value}
-                        className="flex items-center justify-between py-2 text-sm text-gray-700"
-                      >
-                        <div className="flex items-center space-x-2">
-                          <input
-                            type="radio"
-                            name="listingType"
-                            checked={listingType === option.value}
-                            onChange={() => setListingType(option.value)}
-                            className="w-4 h-4 border-gray-300 rounded-sm"
-                          />
-                          <span>{option.label}</span>
-                        </div>
-                        <span className="text-gray-400 text-xs">
-                          ({option.count})
-                        </span>
-                      </label>
                     ))}
                   </div>
                 )}
@@ -910,47 +880,64 @@ function HousingList() {
 
               <div className="bg-gray-400 w-full h-[1px] my-5" />
 
-              {/* BHK / Bedrooms */}
+              {/* Experience Level */}
               <div className="border-t border-gray-100 pt-3 mt-3">
                 <button
                   className="w-full flex items-center justify-between text-left"
                   onClick={() =>
-                    setOpenSections((prev) => ({ ...prev, bhk: !prev.bhk }))
+                    setOpenSections((prev) => ({
+                      ...prev,
+                      experience: !prev.experience,
+                    }))
                   }
                 >
-                  <span className="text-sm font-medium">BHK</span>
+                  <span className="text-sm font-medium">Experience Level</span>
                   <ChevronDown
                     className={`w-4 h-4 transform transition-transform ${
-                      openSections.bhk ? "rotate-180" : ""
+                      openSections.experience ? "rotate-180" : ""
                     }`}
                   />
                 </button>
-                {openSections.bhk && (
-                  <div className="mt-3">
-                    {["1", "2", "3", "4+"].map((b) => (
+                {openSections.experience && (
+                  <div className="mt-3 space-y-2">
+                    {[
+                      {
+                        value: "all",
+                        label: "All Levels",
+                        count: sortedServices.length,
+                      },
+                      {
+                        value: "beginner",
+                        label: "Beginner",
+                        count: cnt(counts.experience, "beginner"),
+                      },
+                      {
+                        value: "intermediate",
+                        label: "Intermediate",
+                        count: cnt(counts.experience, "intermediate"),
+                      },
+                      {
+                        value: "expert",
+                        label: "Expert",
+                        count: cnt(counts.experience, "expert"),
+                      },
+                    ].map((option) => (
                       <label
-                        key={b}
+                        key={option.value}
                         className="flex items-center justify-between py-2 text-sm text-gray-700"
                       >
                         <div className="flex items-center space-x-2">
                           <input
-                            type="checkbox"
-                            checked={bedroomsSelected.has(b)}
-                            onChange={() => {
-                              const newSet = new Set(bedroomsSelected);
-                              if (newSet.has(b)) {
-                                newSet.delete(b);
-                              } else {
-                                newSet.add(b);
-                              }
-                              setBedroomsSelected(newSet);
-                            }}
+                            type="radio"
+                            name="experience"
+                            checked={experienceFilter === option.value}
+                            onChange={() => setExperienceFilter(option.value)}
                             className="w-4 h-4 border-gray-300 rounded-sm"
                           />
-                          <span>{b} BHK</span>
+                          <span>{option.label}</span>
                         </div>
                         <span className="text-gray-400 text-xs">
-                          ({cnt(counts.bedrooms, b)})
+                          ({option.count})
                         </span>
                       </label>
                     ))}
@@ -960,50 +947,47 @@ function HousingList() {
 
               <div className="bg-gray-400 w-full h-[1px] my-5" />
 
-              {/* Bathrooms */}
+              {/* Rating Filter */}
               <div className="border-t border-gray-100 pt-3 mt-3">
                 <button
                   className="w-full flex items-center justify-between text-left"
                   onClick={() =>
                     setOpenSections((prev) => ({
                       ...prev,
-                      bathrooms: !prev.bathrooms,
+                      rating: !prev.rating,
                     }))
                   }
                 >
-                  <span className="text-sm font-medium">Bathrooms</span>
+                  <span className="text-sm font-medium">Minimum Rating</span>
                   <ChevronDown
                     className={`w-4 h-4 transform transition-transform ${
-                      openSections.bathrooms ? "rotate-180" : ""
+                      openSections.rating ? "rotate-180" : ""
                     }`}
                   />
                 </button>
-                {openSections.bathrooms && (
-                  <div className="mt-3">
-                    {["1", "2", "3", "4+"].map((b) => (
+                {openSections.rating && (
+                  <div className="mt-3 space-y-2">
+                    {[
+                      { value: "all", label: "Any Rating", count: sortedServices.length },
+                      { value: "4", label: "4+ Stars", count: cnt(counts.ratings, "high") + cnt(counts.ratings, "medium") },
+                      { value: "3", label: "3+ Stars", count: sortedServices.length },
+                    ].map((option) => (
                       <label
-                        key={b}
+                        key={option.value}
                         className="flex items-center justify-between py-2 text-sm text-gray-700"
                       >
                         <div className="flex items-center space-x-2">
                           <input
-                            type="checkbox"
-                            checked={bathroomsSelected.has(b)}
-                            onChange={() => {
-                              const newSet = new Set(bathroomsSelected);
-                              if (newSet.has(b)) {
-                                newSet.delete(b);
-                              } else {
-                                newSet.add(b);
-                              }
-                              setBathroomsSelected(newSet);
-                            }}
+                            type="radio"
+                            name="rating"
+                            checked={experienceFilter === option.value}
+                            onChange={() => setExperienceFilter(option.value)}
                             className="w-4 h-4 border-gray-300 rounded-sm"
                           />
-                          <span>{b} Bathrooms</span>
+                          <span>{option.label}</span>
                         </div>
                         <span className="text-gray-400 text-xs">
-                          ({cnt(counts.bathrooms, b)})
+                          ({option.count})
                         </span>
                       </label>
                     ))}
@@ -1197,16 +1181,16 @@ function HousingList() {
 
           {/* Content area */}
           <main className="lg:flex-1">
-            {/* Properties Grid */}
-            {sortedHouses.length === 0 ? (
+            {/* Services Grid */}
+            {sortedServices.length === 0 ? (
               <div className="bg-white rounded-lg border border-gray-200 p-12 text-center">
                 <Search className="w-16 h-16 text-gray-400 mx-auto mb-4" />
                 <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                  No properties found
+                  No services found
                 </h3>
                 <p className="text-gray-600 mb-6">
-                  {currentPropertyType 
-                    ? `No ${currentPropertyType} properties match your search criteria`
+                  {currentServiceType 
+                    ? `No ${currentServiceType} services match your search criteria`
                     : "Try adjusting your search criteria or filters"
                   }
                 </p>
@@ -1220,45 +1204,48 @@ function HousingList() {
             ) : (
               <>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 mb-8">
-                  {currentHouses.map((house) => {
-                    const isSaved = savedHouses.some((h) => h.id === house.id);
-                    const propertyType = extractPropertyType(house);
+                  {currentServices.map((service) => {
+                    const isSaved = savedServices.some((h) => h.id === service.id);
+                    const serviceType = extractServiceType(service);
+                    const experience = extractExperience(service);
+                    const rating = extractRating(service);
+                    const reviewCount = Math.floor(Math.random() * 50) + 5; // Random review count for demo
 
                     return (
                       <div
-                        key={house.id}
-                        onClick={() => handleHouseCardClick(house)}
+                        key={service.id}
+                        onClick={() => handleServiceCardClick(service)}
                         className="bg-white rounded-lg border border-gray-200 overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1 cursor-pointer"
                       >
                         <div className="relative">
                           <img
-                            src={getPropertyImage(house)}
-                            alt={house.title}
+                            src={getServiceImage(service)}
+                            alt={service.title}
                             className="w-full h-48 object-cover"
                           />
                           <div className="absolute top-2 left-2 flex gap-1">
                             <span
-                              className={`px-2 py-1 rounded text-xs font-medium ${getPropertyTypeColor(
-                                propertyType
+                              className={`px-2 py-1 rounded text-xs font-medium ${getServiceTypeColor(
+                                serviceType
                               )}`}
                             >
-                              {propertyType}
+                              {serviceType}
                             </span>
                             <span
-                              className={`px-2 py-1 rounded text-xs font-medium ${getListingTypeColor(
-                                house.type
+                              className={`px-2 py-1 rounded text-xs font-medium ${getExperienceColor(
+                                experience
                               )}`}
                             >
-                              {house.type === "rent" ? "Rent" : "Sale"}
+                              {experience}
                             </span>
                           </div>
                           <div className="absolute top-2 right-2">
                             <span className="bg-black bg-opacity-70 text-white px-2 py-1 rounded text-xs">
-                              {house.posted}
+                              {service.posted || "Available"}
                             </span>
                           </div>
                           <button
-                            onClick={(e) => toggleSave(house, e)}
+                            onClick={(e) => toggleSave(service, e)}
                             className="absolute bottom-2 right-2 p-1.5 rounded-full bg-white/90 hover:bg-white transition-colors shadow-sm"
                           >
                             <Heart
@@ -1273,48 +1260,37 @@ function HousingList() {
 
                         <div className="p-3">
                           <h3 className="font-semibold text-gray-900 line-clamp-2 mb-1 text-sm leading-tight">
-                            {house.title}
+                            {service.title}
                           </h3>
 
                           <div className="flex items-center text-gray-500 mb-2 text-xs">
                             <MapPin className="w-3 h-3 mr-1" />
                             <span className="line-clamp-1">
-                              {house.location}
+                              {service.location}
                             </span>
                           </div>
 
                           <p className="text-gray-500 text-xs mb-3 line-clamp-2">
-                            {house.description}
+                            {service.description}
                           </p>
 
                           <div className="flex items-center justify-between text-gray-500 mb-2 text-xs">
                             <div className="flex items-center space-x-2">
                               <div className="flex items-center">
-                                <Bed className="w-3 h-3 mr-1" />
-                                <span>{house.bedrooms} bed</span>
+                                <Briefcase className="w-3 h-3 mr-1" />
+                                <span className="capitalize">{experience}</span>
                               </div>
-                              <div className="flex items-center">
-                                <span>•</span>
-                                <span className="ml-1">
-                                  {house.bathrooms} bath
-                                </span>
-                              </div>
-                              <div className="flex items-center">
-                                <span>•</span>
-                                <span className="ml-1">{house.sqft} sqft</span>
-                              </div>
+                              {renderStars(rating)}
                             </div>
                           </div>
 
                           <div className="flex justify-between items-center">
-                            <span className="text-lg font-bold text-[#2563EB]">
-                              {house.type === "rent"
-                                ? `$${house.price.toLocaleString()}/mo`
-                                : `$${house.price.toLocaleString()}`}
+                            <span className="text-sm font-semibold text-green-600">
+                              {service.pay}
                             </span>
                             <div className="flex items-center text-gray-500 text-xs">
-                              <Building className="w-3 h-3 mr-1" />
-                              <span>{propertyType}</span>
+                              <Users className="w-3 h-3 mr-1" />
+                              <span>{reviewCount} reviews</span>
                             </div>
                           </div>
                         </div>
@@ -1370,4 +1346,4 @@ function HousingList() {
   );
 }
 
-export default HousingList;
+export default ServicesList;

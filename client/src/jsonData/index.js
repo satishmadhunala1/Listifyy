@@ -1718,3 +1718,510 @@ export const communityData = {
     },
   ],
 };
+
+
+
+export const servicesData = {
+  services: [
+    {
+      "id": 101,
+      "title": "Home Cleaning",
+      "price": "$30/hr",
+      "location": "Charlotte, NC",
+      "description": "Deep cleaning services for homes and apartments.",
+      "images": [
+        "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070&auto=format&fit=crop"
+      ]
+    },
+    {
+      "id": 102,
+      "title": "Electrical Repairs",
+      "price": "$60/hr",
+      "location": "Raleigh, NC",
+      "description": "Certified electrician for wiring and repairs.",
+      "images": [
+        "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?q=80&w=2070&auto=format&fit=crop"
+      ]
+    },
+    {
+      "id": 103,
+      "title": "Dog Walking",
+      "price": "$15 per walk",
+      "location": "Durham, NC",
+      "description": "Daily dog walking and pet care services.",
+      "images": [
+        "https://images.unsplash.com/photo-1570129477492-45c003edd2be?q=80&w=2070&auto=format&fit=crop"
+      ]
+    },
+    {
+      "id": 104,
+      "title": "Painting Services",
+      "price": "$45/hr",
+      "location": "Greensboro, NC",
+      "description": "Interior and exterior painting for homes.",
+      "images": [
+        "https://images.unsplash.com/photo-1493809842364-78817add7ffb?q=80&w=2070&auto=format&fit=crop"
+      ]
+    },
+    {
+      "id": 105,
+      "title": "Car Detailing",
+      "price": "$80 per car",
+      "location": "Asheville, NC",
+      "description": "Full interior and exterior car cleaning.",
+      "images": [
+        "https://images.unsplash.com/photo-1600585154526-990dced4db0d?q=80&w=2070&auto=format&fit=crop"
+      ]
+    },
+    {
+      "id": 106,
+      "title": "Personal Training",
+      "price": "$40/hr",
+      "location": "Winston-Salem, NC",
+      "description": "Custom fitness plans and one-on-one training.",
+      "images": [
+        "https://images.unsplash.com/photo-1600585152915-18c7f8f4596e?q=80&w=2070&auto=format&fit=crop"
+      ]
+    },
+    {
+      "id": 107,
+      "title": "Roofing Repairs",
+      "price": "$70/hr",
+      "location": "Fayetteville, NC",
+      "description": "Roof leak fixes and replacement services.",
+      "images": [
+        "https://images.unsplash.com/photo-1600585153490-7d16b7e91b7a?q=80&w=2070&auto=format&fit=crop"
+      ]
+    },
+    {
+      "id": 108,
+      "title": "Graphic Design",
+      "price": "$35/hr",
+      "location": "Wilmington, NC",
+      "description": "Logo and branding design services.",
+      "images": [
+        "https://images.unsplash.com/photo-1560448205-4d9b3e6bb6db?q=80&w=2070&auto=format&fit=crop"
+      ]
+    },
+    {
+      "id": 109,
+      "title": "Child Care",
+      "price": "$20/hr",
+      "location": "Cary, NC",
+      "description": "Safe and reliable childcare for all ages.",
+      "images": [
+        "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070&auto=format&fit=crop"
+      ]
+    },
+    {
+      "id": 110,
+      "title": "Furniture Assembly",
+      "price": "$25/hr",
+      "location": "Raleigh, NC",
+      "description": "Assembly of IKEA and other furniture.",
+      "images": [
+        "https://images.unsplash.com/photo-1600585152915-18c7f8f4596e?q=80&w=2070&auto=format&fit=crop"
+      ]
+    },
+    {
+      "id": 111,
+      "title": "Landscaping",
+      "price": "$50 per visit",
+      "location": "Durham, NC",
+      "description": "Garden design and maintenance services.",
+      "images": [
+        "https://images.unsplash.com/photo-1600585153490-7d16b7e91b7a?q=80&w=2070&auto=format&fit=crop"
+      ]
+    },
+    {
+      "id": 112,
+      "title": "Web Development",
+      "price": "$60/hr",
+      "location": "Charlotte, NC",
+      "description": "Custom website design and development.",
+      "images": [
+        "https://images.unsplash.com/photo-1600585154526-990dced4db0d?q=80&w=2070&auto=format&fit=crop"
+      ]
+    },
+    {
+      "id": 113,
+      "title": "House Sitting",
+      "price": "$30/day",
+      "location": "Greensboro, NC",
+      "description": "Home monitoring and pet care while you're away.",
+      "images": [
+        "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?q=80&w=2070&auto=format&fit=crop"
+      ]
+    },
+    {
+      "id": 114,
+      "title": "Photography",
+      "price": "$75/hr",
+      "location": "Asheville, NC",
+      "description": "Professional portrait and event photography.",
+      "images": [
+        "https://images.unsplash.com/photo-1570129477492-45c003edd2be?q=80&w=2070&auto=format&fit=crop"
+      ]
+    },
+    {
+      "id": 115,
+      "title": "HVAC Services",
+      "price": "$90/hr",
+      "location": "Winston-Salem, NC",
+      "description": "Heating and cooling system repairs.",
+      "images": [
+        "https://images.unsplash.com/photo-1493809842364-78817add7ffb?q=80&w=2070&auto=format&fit=crop"
+      ]
+    },
+    {
+      "id": 116,
+      "title": "Tutoring - English",
+      "price": "$25/hr",
+      "location": "Fayetteville, NC",
+      "description": "English language and literature tutoring.",
+      "images": [
+        "https://images.unsplash.com/photo-1600585154526-990dced4db0d?q=80&w=2070&auto=format&fit=crop"
+      ]
+    },
+    {
+      "id": 117,
+      "title": "Pressure Washing",
+      "price": "$50 per job",
+      "location": "Wilmington, NC",
+      "description": "Cleaning driveways, decks, and exteriors.",
+      "images": [
+        "https://images.unsplash.com/photo-1600585152915-18c7f8f4596e?q=80&w=2070&auto=format&fit=crop"
+      ]
+    },
+    {
+      "id": 118,
+      "title": "Moving Services",
+      "price": "$100/half day",
+      "location": "Cary, NC",
+      "description": "Local moving help with trucks.",
+      "images": [
+        "https://images.unsplash.com/photo-1600585153490-7d16b7e91b7a?q=80&w=2070&auto=format&fit=crop"
+      ]
+    },
+    {
+      "id": 119,
+      "title": "Pool Cleaning",
+      "price": "$60 per visit",
+      "location": "Raleigh, NC",
+      "description": "Regular pool maintenance and cleaning.",
+      "images": [
+        "https://images.unsplash.com/photo-1560448205-4d9b3e6bb6db?q=80&w=2070&auto=format&fit=crop"
+      ]
+    },
+    {
+      "id": 120,
+      "title": "Video Editing",
+      "price": "$50/hr",
+      "location": "Durham, NC",
+      "description": "Professional video editing services.",
+      "images": [
+        "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070&auto=format&fit=crop"
+      ]
+    },
+    {
+      "id": 121,
+      "title": "Carpentry",
+      "price": "$55/hr",
+      "location": "Charlotte, NC",
+      "description": "Custom furniture and repair services.",
+      "images": [
+        "https://images.unsplash.com/photo-1600585152915-18c7f8f4596e?q=80&w=2070&auto=format&fit=crop"
+      ]
+    },
+    {
+      "id": 122,
+      "title": "Yoga Instruction",
+      "price": "$30/hr",
+      "location": "Greensboro, NC",
+      "description": "Private and group yoga sessions.",
+      "images": [
+        "https://images.unsplash.com/photo-1600585153490-7d16b7e91b7a?q=80&w=2070&auto=format&fit=crop"
+      ]
+    },
+    {
+      "id": 123,
+      "title": "Drywall Repair",
+      "price": "$45/hr",
+      "location": "Asheville, NC",
+      "description": "Fixing holes and cracks in walls.",
+      "images": [
+        "https://images.unsplash.com/photo-1600585154526-990dced4db0d?q=80&w=2070&auto=format&fit=crop"
+      ]
+    },
+    {
+      "id": 124,
+      "title": "Event Planning",
+      "price": "$75/hr",
+      "location": "Winston-Salem, NC",
+      "description": "Wedding and party planning services.",
+      "images": [
+        "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?q=80&w=2070&auto=format&fit=crop"
+      ]
+    },
+    {
+      "id": 125,
+      "title": "Gutter Cleaning",
+      "price": "$40 per job",
+      "location": "Fayetteville, NC",
+      "description": "Removal of debris from gutters.",
+      "images": [
+        "https://images.unsplash.com/photo-1570129477492-45c003edd2be?q=80&w=2070&auto=format&fit=crop"
+      ]
+    },
+    {
+      "id": 126,
+      "title": "Music Lessons",
+      "price": "$35/hr",
+      "location": "Wilmington, NC",
+      "description": "Piano, guitar, and violin lessons.",
+      "images": [
+        "https://images.unsplash.com/photo-1493809842364-78817add7ffb?q=80&w=2070&auto=format&fit=crop"
+      ]
+    },
+    {
+      "id": 127,
+      "title": "Snow Removal",
+      "price": "$50 per visit",
+      "location": "Cary, NC",
+      "description": "Snow plowing and shoveling services.",
+      "images": [
+        "https://images.unsplash.com/photo-1600585154526-990dced4db0d?q=80&w=2070&auto=format&fit=crop"
+      ]
+    },
+    {
+      "id": 128,
+      "title": "SEO Services",
+      "price": "$70/hr",
+      "location": "Raleigh, NC",
+      "description": "Search engine optimization for businesses.",
+      "images": [
+        "https://images.unsplash.com/photo-1600585152915-18c7f8f4596e?q=80&w=2070&auto=format&fit=crop"
+      ]
+    },
+    {
+      "id": 129,
+      "title": "Appliance Repair",
+      "price": "$65/hr",
+      "location": "Durham, NC",
+      "description": "Fixing washers, dryers, and refrigerators.",
+      "images": [
+        "https://images.unsplash.com/photo-1600585153490-7d16b7e91b7a?q=80&w=2070&auto=format&fit=crop"
+      ]
+    },
+    {
+      "id": 130,
+      "title": "Catering Services",
+      "price": "$200/event",
+      "location": "Charlotte, NC",
+      "description": "Custom catering for events and parties.",
+      "images": [
+        "https://images.unsplash.com/photo-1560448205-4d9b3e6bb6db?q=80&w=2070&auto=format&fit=crop"
+      ]
+    },
+    {
+      "id": 131,
+      "title": "Interior Design",
+      "price": "$80/hr",
+      "location": "Greensboro, NC",
+      "description": "Home and office interior design consultation.",
+      "images": [
+        "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070&auto=format&fit=crop"
+      ]
+    },
+    {
+      "id": 132,
+      "title": "Pet Grooming",
+      "price": "$40 per session",
+      "location": "Asheville, NC",
+      "description": "Bathing and grooming for pets.",
+      "images": [
+        "https://images.unsplash.com/photo-1600585152915-18c7f8f4596e?q=80&w=2070&auto=format&fit=crop"
+      ]
+    },
+    {
+      "id": 133,
+      "title": "Tile Installation",
+      "price": "$55/hr",
+      "location": "Winston-Salem, NC",
+      "description": "Floor and wall tile installation services.",
+      "images": [
+        "https://images.unsplash.com/photo-1600585153490-7d16b7e91b7a?q=80&w=2070&auto=format&fit=crop"
+      ]
+    },
+    {
+      "id": 134,
+      "title": "Voice Lessons",
+      "price": "$40/hr",
+      "location": "Fayetteville, NC",
+      "description": "Singing and vocal coaching for all levels.",
+      "images": [
+        "https://images.unsplash.com/photo-1600585154526-990dced4db0d?q=80&w=2070&auto=format&fit=crop"
+      ]
+    },
+    {
+      "id": 135,
+      "title": "Fence Installation",
+      "price": "$75/hr",
+      "location": "Wilmington, NC",
+      "description": "Wood and metal fence installation.",
+      "images": [
+        "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?q=80&w=2070&auto=format&fit=crop"
+      ]
+    },
+    {
+      "id": 136,
+      "title": "Dance Lessons",
+      "price": "$30/hr",
+      "location": "Cary, NC",
+      "description": "Private dance classes for various styles.",
+      "images": [
+        "https://images.unsplash.com/photo-1570129477492-45c003edd2be?q=80&w=2070&auto=format&fit=crop"
+      ]
+    },
+    {
+      "id": 137,
+      "title": "Pest Control",
+      "price": "$60 per visit",
+      "location": "Raleigh, NC",
+      "description": "Safe and effective pest removal services.",
+      "images": [
+        "https://images.unsplash.com/photo-1493809842364-78817add7ffb?q=80&w=2070&auto=format&fit=crop"
+      ]
+    },
+    {
+      "id": 138,
+      "title": "Translation Services",
+      "price": "$35/hr",
+      "location": "Durham, NC",
+      "description": "Document and verbal translation in multiple languages.",
+      "images": [
+        "https://images.unsplash.com/photo-1600585154526-990dced4db0d?q=80&w=2070&auto=format&fit=crop"
+      ]
+    },
+    {
+      "id": 139,
+      "title": "Window Cleaning",
+      "price": "$45 per job",
+      "location": "Charlotte, NC",
+      "description": "Interior and exterior window cleaning.",
+      "images": [
+        "https://images.unsplash.com/photo-1600585152915-18c7f8f4596e?q=80&w=2070&auto=format&fit=crop"
+      ]
+    },
+    {
+      "id": 140,
+      "title": "Accounting Services",
+      "price": "$70/hr",
+      "location": "Greensboro, NC",
+      "description": "Tax preparation and bookkeeping services.",
+      "images": [
+        "https://images.unsplash.com/photo-1600585153490-7d16b7e91b7a?q=80&w=2070&auto=format&fit=crop"
+      ]
+    },
+    {
+      "id": 141,
+      "title": "Hair Styling",
+      "price": "$50/hr",
+      "location": "Asheville, NC",
+      "description": "Professional haircuts and styling.",
+      "images": [
+        "https://images.unsplash.com/photo-1560448205-4d9b3e6bb6db?q=80&w=2070&auto=format&fit=crop"
+      ]
+    },
+    {
+      "id": 142,
+      "title": "Martial Arts Training",
+      "price": "$35/hr",
+      "location": "Winston-Salem, NC",
+      "description": "Karate and self-defense classes.",
+      "images": [
+        "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070&auto=format&fit=crop"
+      ]
+    },
+    {
+      "id": 143,
+      "title": "Deck Building",
+      "price": "$80/hr",
+      "location": "Fayetteville, NC",
+      "description": "Custom deck construction and repairs.",
+      "images": [
+        "https://images.unsplash.com/photo-1600585152915-18c7f8f4596e?q=80&w=2070&auto=format&fit=crop"
+      ]
+    },
+    {
+      "id": 144,
+      "title": "Copywriting",
+      "price": "$45/hr",
+      "location": "Wilmington, NC",
+      "description": "Content creation for websites and ads.",
+      "images": [
+        "https://images.unsplash.com/photo-1600585153490-7d16b7e91b7a?q=80&w=2070&auto=format&fit=crop"
+      ]
+    },
+    {
+      "id": 145,
+      "title": "Tree Trimming",
+      "price": "$55 per visit",
+      "location": "Cary, NC",
+      "description": "Safe tree pruning and removal.",
+      "images": [
+        "https://images.unsplash.com/photo-1600585154526-990dced4db0d?q=80&w=2070&auto=format&fit=crop"
+      ]
+    },
+    {
+      "id": 146,
+      "title": "Virtual Assistance",
+      "price": "$25/hr",
+      "location": "Raleigh, NC",
+      "description": "Administrative support and scheduling.",
+      "images": [
+        "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?q=80&w=2070&auto=format&fit=crop"
+      ]
+    },
+    {
+      "id": 147,
+      "title": "Floral Arrangement",
+      "price": "$40/event",
+      "location": "Durham, NC",
+      "description": "Custom flower arrangements for events.",
+      "images": [
+        "https://images.unsplash.com/photo-1570129477492-45c003edd2be?q=80&w=2070&auto=format&fit=crop"
+      ]
+    },
+    {
+      "id": 148,
+      "title": "Locksmith Services",
+      "price": "$50 per job",
+      "location": "Charlotte, NC",
+      "description": "Lock repairs and key duplication.",
+      "images": [
+        "https://images.unsplash.com/photo-1493809842364-78817add7ffb?q=80&w=2070&auto=format&fit=crop"
+      ]
+    },
+    {
+      "id": 149,
+      "title": "Cooking Classes",
+      "price": "$30/hr",
+      "location": "Greensboro, NC",
+      "description": "Learn to cook various cuisines.",
+      "images": [
+        "https://images.unsplash.com/photo-1600585154526-990dced4db0d?q=80&w=2070&auto=format&fit=crop"
+      ]
+    },
+    {
+      "id": 150,
+      "title": "Home Organization",
+      "price": "$35/hr",
+      "location": "Asheville, NC",
+      "description": "Decluttering and organizing services.",
+      "images": [
+        "https://images.unsplash.com/photo-1600585152915-18c7f8f4596e?q=80&w=2070&auto=format&fit=crop"
+      ]
+    }
+  ],
+}
