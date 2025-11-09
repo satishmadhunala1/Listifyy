@@ -557,7 +557,7 @@ function HousingList() {
   return (
     <>
       <style>{sliderCSS}</style>
-      <div className="max-w-7xl mx-auto bg-white pt-24 mt-10   ">
+      <div className="max-w-7xl mx-auto bg-white pt-24   ">
         {/* Header */}
           <div className=" px-4 py-4">
             {/* Breadcrumb Navigation */}
@@ -589,8 +589,7 @@ function HousingList() {
         </div>
 
         {/* Top filter bar */}
-        <div className=" flex  sticky top-24 z-30">
-          <div className=" px-4">
+        <div className=" flex  sticky  z-30">
             <div className="flex flex-wrap items-end justify-end py-3">
               {/* <div className="flex items-center gap-4">
                 <span className="text-sm font-medium text-gray-700">
@@ -601,19 +600,11 @@ function HousingList() {
                   {sortedHouses.length} properties found
                 </span>
               </div> */}
-
-              
-
-
-
             </div>
-          </div>
         </div>
 
 
-<div className="flex items-center justify-between  w-full gap-4">
-
-
+<div className="  flex items-center justify-between  w-full gap-4  px-8 ">
      <div className="flex items-center space-x-2 text-md">
               <Link to="/" className="hover:text-[#2563EB]">
                 Home
