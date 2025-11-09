@@ -23,11 +23,12 @@ const mainCategories = [
   { name: "All Categories", icon: FaTh, isAll: true },
   { name: "Community", icon: FaUsers, path: "/community" },
   { name: "For Sale", icon: FaShoppingBag, path: "/for-sale" },
+    { name: "Services", icon: FaCogs, path: "/services" },
+
   { name: "Jobs", icon: FaBriefcase, path: "/jobs" },
   { name: "Resumes", icon: FaBriefcase, path: "/resumes" },
   { name: "Gigs", icon: FaBriefcase, path: "/gigs" },
   { name: "Discussion Forums", icon: FaBriefcase, path: "/discussion-forums" },
-  { name: "Services", icon: FaCogs, path: "/services" },
 ];
 
 const locationData = [

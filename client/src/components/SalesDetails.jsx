@@ -279,7 +279,7 @@ function SalesDetails() {
             The item you're looking for doesn't exist.
           </p>
           <Link
-            to="/categories/sales"
+            to="/for-sale"
             className="bg-[#2563EB] text-white px-6 py-3 rounded-lg hover:bg-[#1D4ED8] transition-colors font-medium inline-flex items-center"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
@@ -320,7 +320,7 @@ function SalesDetails() {
               Home
             </Link>
             <ChevronRightSmall className="w-4 h-4" />
-            <Link to="/categories" className="hover:text-[#2563EB]">
+            <Link to="/for-sale" className="hover:text-[#2563EB]">
               Marketplace
             </Link>
             <ChevronRightSmall className="w-4 h-4" />
