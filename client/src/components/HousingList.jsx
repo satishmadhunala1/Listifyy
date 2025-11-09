@@ -564,14 +564,14 @@ function HousingList() {
          
 
             {/* Simple Popular Searches - just text */}
-            {/* <div className="mb-3">
+            <div className="mb-3">
               <span className="text-sm text-gray-600">
                 <span className="text-black font-medium">
                   Popular Searches:
                 </span>{" "}
                 {popularCities.join(", ")}
               </span>
-            </div> */}
+            </div>
 
             {/* Title Section */}
             {/* <div className="mb-4">
