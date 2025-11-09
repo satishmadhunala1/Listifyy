@@ -557,7 +557,7 @@ function HousingList() {
   return (
     <>
       <style>{sliderCSS}</style>
-      <div className="max-w-7xl mx-auto bg-white pt-24   ">
+      <div className="max-w-7xl mx-auto bg-white pt-14 ">
         {/* Header */}
           <div className=" px-4 py-4">
             {/* Breadcrumb Navigation */}

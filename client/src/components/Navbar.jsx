@@ -18,10 +18,11 @@ import {
 import { ShimmerButton } from "./ui/shimmer-button";
 
 const mainCategories = [
+    { name: "Housing", icon: FaHome, path: "/housing" },
+
   { name: "All Categories", icon: FaTh, isAll: true },
   { name: "Community", icon: FaUsers, path: "/community" },
   { name: "For Sale", icon: FaShoppingBag, path: "/for-sale" },
-  { name: "Housing", icon: FaHome, path: "/housing" },
   { name: "Jobs", icon: FaBriefcase, path: "/jobs" },
   { name: "Resumes", icon: FaBriefcase, path: "/resumes" },
   { name: "Gigs", icon: FaBriefcase, path: "/gigs" },
